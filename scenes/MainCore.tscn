@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/CardBase.tscn" type="PackedScene" id=1]
+
+[node name="Node2D" type="Node2D"]
+__meta__ = {
+"_edit_vertical_guides_": [ 360.0 ]
+}
+
+[node name="Cards" type="Node2D" parent="."]
+
+[node name="CardBase" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 360, 331 )
+
+[node name="CardBase2" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 280, 331 )
+
+[node name="CardBase3" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 440, 331 )
+
+[node name="CardBase4" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 320, 201 )
+
+[node name="CardBase5" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 400, 201 )
+
+[node name="CardBase6" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 280, 71 )
+
+[node name="CardBase7" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 360, 71 )
+
+[node name="CardBase8" parent="Cards" instance=ExtResource( 1 )]
+position = Vector2( 440, 71 )
+
+[node name="PosPlayer" type="Position2D" parent="Cards"]
+position = Vector2( 360, 331 )
+
+[node name="PosLeftArm" type="Position2D" parent="Cards"]
+position = Vector2( 280, 331 )
+
+[node name="PosRightArm" type="Position2D" parent="Cards"]
+position = Vector2( 440, 331 )
+
+[node name="PosLeftAction" type="Position2D" parent="Cards"]
+position = Vector2( 320, 201 )
+
+[node name="PosRightAction" type="Position2D" parent="Cards"]
+position = Vector2( 400, 201 )
+
+[node name="PosLeftMove" type="Position2D" parent="Cards"]
+position = Vector2( 280, 71 )
+
+[node name="PosMiddleMove" type="Position2D" parent="Cards"]
+position = Vector2( 360, 71 )
+
+[node name="PosRightMove" type="Position2D" parent="Cards"]
+position = Vector2( 440, 71 )
