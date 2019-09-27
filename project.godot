@@ -19,11 +19,15 @@ config/name="Card-RPG - Crawler Card, The Game"
 run/main_scene="res://scenes/MainCore.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+CardManager="*res://scripts/global/CardManager.gd"
+
 [display]
 
 window/size/width=720
 window/size/height=405
-window/size/resizable=false
+window/size/fullscreen=true
 window/size/test_width=1920
 window/size/test_height=1080
 window/stretch/mode="2d"

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/monstro_1.png-ddefe118af3f173cacf293919e6cc867.stex"
+path="res://.import/pocao_sol_1.png-963a9cc9c1e93b0c42f95edf133dd841.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/inimigo/monstro_1.png"
-dest_files=[ "res://.import/monstro_1.png-ddefe118af3f173cacf293919e6cc867.stex" ]
+source_file="res://assets/pocao/pocao_sol_1.png"
+dest_files=[ "res://.import/pocao_sol_1.png-963a9cc9c1e93b0c42f95edf133dd841.stex" ]
 
 [params]
 
