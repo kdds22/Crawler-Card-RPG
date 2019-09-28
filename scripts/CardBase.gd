@@ -5,7 +5,9 @@ extends RigidBody2D
 
 
 func _ready() -> void:
-	
+	for i in self.get_groups():
+		if i != 'root_canvas131':
+			print("Grupo da Carta -> "+i)
 	pass # func _ready
 
 
@@ -53,7 +55,7 @@ func set_cristais(value : String) -> void:
 
 
 #Define a REGION da SPRITE dos cristais/joias -> CardBase
-func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2):
+func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 	$Sprite/CristalMini.region_rect = rect2_mini
 	$Sprite/CristalBig.region_rect = rect2_big
 	

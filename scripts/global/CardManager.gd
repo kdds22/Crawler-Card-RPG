@@ -26,7 +26,7 @@ func _ready() -> void:
 
 # retorna um VECTOR2 com a IMAGEM e um NOME para um especifico tipo de Carta
 func get_card_type(value : String):
-	print("Tipo: "+value)
+#	print("Tipo: "+value)
 	var name = ""
 	
 	# Retorna a imagem de uma ARMA

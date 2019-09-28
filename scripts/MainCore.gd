@@ -23,6 +23,7 @@ func start_pre_card_base(pos_table : Position2D):
 	var image = CardManager.get_card_type(str(pos_table.get_groups()[0]))
 	card_base.set_image_type(str(image[0]))
 	card_base.set_name_type(str(image[1]))
+	card_base.add_to_group(str(pos_table.get_groups()[0]))
 	$CardsTable.add_child(card_base)
 	
 	pass # func start_pre_card_base

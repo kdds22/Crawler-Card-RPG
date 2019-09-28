@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/MainCore.gd" type="Script" id=1]
+[ext_resource path="res://scripts/CardsTable.gd" type="Script" id=2]
 
 [node name="MainCore" type="Node2D"]
 script = ExtResource( 1 )
@@ -51,3 +52,4 @@ position = Vector2( 360, 71 )
 position = Vector2( 440, 71 )
 
 [node name="CardsTable" type="Node" parent="."]
+script = ExtResource( 2 )
