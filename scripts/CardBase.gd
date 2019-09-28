@@ -18,8 +18,9 @@ func get_name_type():
 
 #SETagem da IMAGEM da Carta
 func set_image_type(value : String):
-	if value != null:
+	if value != "Null":
 		$Sprite/ImageType.texture = load(value)
+	else: print(value + " CardBase_set_image_type")
 
 
 
