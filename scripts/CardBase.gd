@@ -28,28 +28,23 @@ func set_image_type(value) -> void:
 	pass # func set_image_type
 
 
+#SETagem da DESCRICAO da Carta
+func set_name_desc(value : String):
+	$Sprite/NameDesc.text = value
+	pass # func set_name_desc
+
+
 #SETagem dos CRISTAIS da Carta
 func set_cristais(value : String) -> void:
 	match value:
 		"AÇÃO":
-			cristal_rect(Rect2(16,0,16,16), Rect2(16,16,16,16))
-			
-			pass
-			
+			cristal_rect(Rect2(16,0,16,16), Rect2(16,16,16,16))			
 		"ARMA":
 			cristal_rect(Rect2(32,0,16,16), Rect2(32,16,16,16))
-			
-			pass
-			
 		"LOCAL":
 			cristal_rect(Rect2(0,0,16,16), Rect2(0,16,16,16))
-			
-			pass
-			
 		"PLAYER":
 			cristal_rect(Rect2(48,0,16,16), Rect2(48,16,16,16))
-			
-			pass
 	
 	pass # func set_cristais
 

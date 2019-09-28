@@ -17,6 +17,25 @@ onready var image_item_weapon = ["res://assets/arma/arco.png",
 # Fim do Pré-Carregamento
 #########################################################################################################
 
+#########################################################################################################
+# Pré-Chamada
+#########################################################################################################
+
+onready var card_local_dungeon = {"Imagem" : image_local[0], "Tipo" : "Local", "Nome" : "Masmorra"}
+onready var card_local_forest = {"Imagem" : image_local[1], "Tipo" : "Local", "Nome" : "Floresta"}
+onready var card_monster_ogre = {"Imagem" : image_action_monster[0], "Tipo" : "Ação", "Nome" : "Ogro"}
+onready var card_potion_moon = {"Imagem" : image_action_potion[0], "Tipo" : "Ação", "Nome" : "Poção da Lua"}
+onready var card_potion_sun = {"Imagem" : image_action_potion[1], "Tipo" : "Ação", "Nome" : "Poção do Sol"}
+onready var card_weapon_bow = {"Imagem" : image_item_weapon[0], "Tipo" : "Arma", "Nome" : "Arco e Flecha"}
+onready var card_weapon_axe = {"Imagem" : image_item_weapon[1], "Tipo" : "Arma", "Nome" : "Machado"}
+onready var card_player_warrior = {"Imagem" : image_player[0], "Tipo" : "Player", "Nome" : "Guerreiro"}
+
+#########################################################################################################
+# Fim da Pré-Chamada
+#########################################################################################################
+
+
+
 
 func _ready() -> void:
 	randomize()

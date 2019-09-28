@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/CardBase.gd" type="Script" id=1]
 [ext_resource path="res://assets/cartas/card_based_1.png" type="Texture" id=2]
@@ -7,6 +7,9 @@
 [ext_resource path="res://assets/cartas/joias_1.png" type="Texture" id=5]
 
 [sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=3]
 font_data = ExtResource( 4 )
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -34,7 +37,7 @@ size_flags_horizontal = 7
 size_flags_vertical = 7
 size_flags_stretch_ratio = 0.0
 custom_fonts/font = SubResource( 1 )
-text = "FLORESTA"
+text = "Local"
 align = 1
 valign = 1
 autowrap = true
@@ -53,6 +56,26 @@ texture = ExtResource( 5 )
 region_enabled = true
 region_rect = Rect2( 0, 16, 16, 16 )
 
+[node name="NameDesc" type="Label" parent="Sprite"]
+modulate = Color( 0, 0, 0, 1 )
+anchor_left = 0.228
+anchor_top = 0.81
+anchor_right = 0.771
+anchor_bottom = 0.938
+margin_left = -48.8
+margin_top = -50.0
+margin_right = -27.1
+margin_bottom = -48.8
+rect_scale = Vector2( 0.7, 0.9 )
+custom_fonts/font = SubResource( 3 )
+text = "FLORESTA"
+align = 1
+valign = 1
+autowrap = true
+clip_text = true
+uppercase = true
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, -1 )
 shape = SubResource( 2 )

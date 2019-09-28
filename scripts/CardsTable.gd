@@ -10,7 +10,7 @@ func _ready() -> void:
 		var card_moldura = pre_card_moldura.instance()
 		card_moldura.position = i.position
 		add_child(card_moldura)
-		print("Nome da Moldura: "+card_moldura.name)
+#		print("Nome da Moldura: "+card_moldura.name)
 		pass
 	
 	pass # Replace with function body.

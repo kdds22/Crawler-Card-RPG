@@ -22,6 +22,7 @@ config/icon="res://icon.png"
 [autoload]
 
 CardManager="*res://scripts/global/CardManager.gd"
+CoreSystemManager="*res://scripts/global/CoreSystemManager.gd"
 
 [display]
 
