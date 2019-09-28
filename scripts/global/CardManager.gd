@@ -4,6 +4,7 @@ extends Node
 # Pré-Carregamento
 #########################################################################################################
 
+onready var image_player = ["res://assets/player/warrior_1.png"]
 onready var image_local = ["res://assets/local/dungeon_1.png",
 							"res://assets/local/forest_1.png"]
 onready var image_action_monster = ["res://assets/inimigo/monstro_1.png"]
@@ -64,8 +65,9 @@ func get_card_type(value : String):
 	
 	# Retorna a imagem do personagem [Guerreiro, Mago, Ladino], setado previamente numa variavel Global
 	if value == "player":
-		var image = len(image_local)
-		return "Null"
+		name = "PLAYER"
+		var image = len(image_player)
+		return [image_player[int(rand_range(0,image))], name]
 		
 		pass # if value player
 	
