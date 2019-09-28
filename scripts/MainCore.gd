@@ -17,12 +17,14 @@ func _ready() -> void:
 
 
 # Inicializa as cartas nas posições pre-definidas em $Cards
+# Inicializa já com atributos
 func start_pre_card_base(pos_table : Position2D):
 	var card_base = pre_card_base.instance()
 	card_base.position = pos_table.position
-	var image = CardManager.get_card_type(str(pos_table.get_groups()[0]))
-	card_base.set_image_type(str(image[0]))
-	card_base.set_name_type(str(image[1]))
+	var card_config = CardManager.get_card_type(str(pos_table.get_groups()[0]))
+	card_base.set_image_type(str(card_config["Image"]))
+	card_base.set_name_type(str(card_config["Type"]))
+	card_base.set_name_desc(str(card_config["Name"]))
 	card_base.add_to_group(str(pos_table.get_groups()[0]))
 	$CardsTable.add_child(card_base)
 	

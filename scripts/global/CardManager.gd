@@ -21,14 +21,14 @@ onready var image_item_weapon = ["res://assets/arma/arco.png",
 # Pré-Chamada
 #########################################################################################################
 
-onready var card_local_dungeon = {"Imagem" : image_local[0], "Tipo" : "Local", "Nome" : "Masmorra"}
-onready var card_local_forest = {"Imagem" : image_local[1], "Tipo" : "Local", "Nome" : "Floresta"}
-onready var card_monster_ogre = {"Imagem" : image_action_monster[0], "Tipo" : "Ação", "Nome" : "Ogro"}
-onready var card_potion_moon = {"Imagem" : image_action_potion[0], "Tipo" : "Ação", "Nome" : "Poção da Lua"}
-onready var card_potion_sun = {"Imagem" : image_action_potion[1], "Tipo" : "Ação", "Nome" : "Poção do Sol"}
-onready var card_weapon_bow = {"Imagem" : image_item_weapon[0], "Tipo" : "Arma", "Nome" : "Arco e Flecha"}
-onready var card_weapon_axe = {"Imagem" : image_item_weapon[1], "Tipo" : "Arma", "Nome" : "Machado"}
-onready var card_player_warrior = {"Imagem" : image_player[0], "Tipo" : "Player", "Nome" : "Guerreiro"}
+onready var card_local_dungeon = {"Image" : image_local[0], "Type" : "Local", "Name" : "Masmorra"}
+onready var card_local_forest = {"Image" : image_local[1], "Type" : "Local", "Name" : "Floresta"}
+onready var card_monster_ogre = {"Image" : image_action_monster[0], "Type" : "Ação", "Name" : "Ogro"}
+onready var card_potion_moon = {"Image" : image_action_potion[0], "Type" : "Ação", "Name" : "Poção Lunar"}
+onready var card_potion_sun = {"Image" : image_action_potion[1], "Type" : "Ação", "Name" : "Poção Solar"}
+onready var card_weapon_bow = {"Image" : image_item_weapon[0], "Type" : "Arma", "Name" : "Arco e Flecha"}
+onready var card_weapon_axe = {"Image" : image_item_weapon[1], "Type" : "Arma", "Name" : "Machado"}
+onready var card_player_warrior = {"Image" : image_player[0], "Type" : "Player", "Name" : "Guerreiro"}
 
 #########################################################################################################
 # Fim da Pré-Chamada
@@ -46,47 +46,45 @@ func _ready() -> void:
 # retorna um VECTOR2 com a IMAGEM e um NOME para um especifico tipo de Carta
 func get_card_type(value : String):
 #	print("Tipo: "+value)
-	var name = ""
 	
 	# Retorna a imagem de uma ARMA
 	if value == "leftArm" or value == "rightArm":
-		name = "ARMA"
-		var image = len(image_item_weapon)
-		return [image_item_weapon[int(rand_range(0,image))], name]
+		var weapon = CoreSystemManager.random_weapon()
+		match weapon:
+			"Bow":
+				return card_weapon_bow
+			"Axe":
+				return card_weapon_axe
 		
 		pass # if value Arm
 	
 	# Retorna a imagem de um INIMIGO ou uma POCAO
 	if value == "leftAction" or value == "rightAction":
-		name = "AÇÃO"
-		var r = int(rand_range(0,2))
-		if r == 0:
-			var image = len(image_action_monster)
-			return [image_action_monster[int(rand_range(0,image))], name]
-			
-			pass # if r
-		
-		elif r == 1:
-			var image = len(image_action_potion)
-			return [image_action_potion[int(rand_range(0,image))], name]
-			
-			pass # elif r
+		var action = CoreSystemManager.random_action()
+		match action:
+			"Ogre":
+				return card_monster_ogre
+			"Moon":
+				return card_potion_moon
+			"Sun":
+				return card_potion_sun
 		
 		pass # if value Action
 	
 	# Retorna a imagem de um LOCAL [Floresta ou Dungeon]
 	if value == "leftMove" or value == "rightMove" or value == "middleMove":
-		name = "LOCAL"
-		var image = len(image_local)
-		return [image_local[int(rand_range(0,image))], name]
+		var local = CoreSystemManager.random_local()
+		match local:
+			"Dungeon":
+				return card_local_dungeon
+			"Forest":
+				return card_local_forest
 		
 		pass # if value Move
 	
 	# Retorna a imagem do personagem [Guerreiro, Mago, Ladino], setado previamente numa variavel Global
 	if value == "player":
-		name = "PLAYER"
-		var image = len(image_player)
-		return [image_player[int(rand_range(0,image))], name]
+		return card_player_warrior
 		
 		pass # if value player
 	

@@ -37,13 +37,13 @@ func set_name_desc(value : String):
 #SETagem dos CRISTAIS da Carta
 func set_cristais(value : String) -> void:
 	match value:
-		"AÇÃO":
+		"Ação":
 			cristal_rect(Rect2(16,0,16,16), Rect2(16,16,16,16))			
-		"ARMA":
+		"Arma":
 			cristal_rect(Rect2(32,0,16,16), Rect2(32,16,16,16))
-		"LOCAL":
+		"Local":
 			cristal_rect(Rect2(0,0,16,16), Rect2(0,16,16,16))
-		"PLAYER":
+		"Player":
 			cristal_rect(Rect2(48,0,16,16), Rect2(48,16,16,16))
 	
 	pass # func set_cristais
