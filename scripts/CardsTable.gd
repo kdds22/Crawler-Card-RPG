@@ -9,6 +9,7 @@ func _ready() -> void:
 	for i in all_pos:
 		var card_moldura = pre_card_moldura.instance()
 		card_moldura.position = i.position
+		card_moldura.name = i.name
 		add_child(card_moldura)
 #		print("Nome da Moldura: "+card_moldura.name)
 		pass

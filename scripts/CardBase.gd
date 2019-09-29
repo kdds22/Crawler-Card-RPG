@@ -1,10 +1,15 @@
 extends RigidBody2D
 
 
+var my_moldure_color : Color
 
+var my_index_table = 0
+
+var focused = false
 
 
 func _ready() -> void:
+	print(get_parent().name+" - ",my_index_table)
 	for i in self.get_groups():
 		if i != 'root_canvas131':
 			print("Grupo da Carta -> "+i)
@@ -38,13 +43,17 @@ func set_name_desc(value : String):
 func set_cristais(value : String) -> void:
 	match value:
 		"Ação":
-			cristal_rect(Rect2(16,0,16,16), Rect2(16,16,16,16))			
+			cristal_rect(Rect2(16,0,16,16), Rect2(16,16,16,16)) # vermelho
+			my_moldure_color = Color(.8,.2,.2,1)
 		"Arma":
-			cristal_rect(Rect2(32,0,16,16), Rect2(32,16,16,16))
+			cristal_rect(Rect2(32,0,16,16), Rect2(32,16,16,16)) # verde
+			my_moldure_color = Color(.2,.8,.2,1)
 		"Local":
-			cristal_rect(Rect2(0,0,16,16), Rect2(0,16,16,16))
+			cristal_rect(Rect2(0,0,16,16), Rect2(0,16,16,16)) # azul
+			my_moldure_color = Color(.2,.2,.8,1)
 		"Player":
-			cristal_rect(Rect2(48,0,16,16), Rect2(48,16,16,16))
+			cristal_rect(Rect2(48,0,16,16), Rect2(48,16,16,16)) # amarelo
+			my_moldure_color = Color(.8,.8,.2,1)
 	
 	pass # func set_cristais
 
@@ -55,6 +64,24 @@ func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 	$Sprite/CristalBig.region_rect = rect2_big
 	
 	pass # func cristal_rect
+
+
+
+func _on_CardBase_mouse_entered() -> void:
+	focused = true
+	print(focused)
+	get_parent().scale = Vector2(1.1,1.1)
+	get_parent().self_modulate = my_moldure_color
+	pass # Replace with function body.
+
+
+func _on_CardBase_mouse_exited() -> void:
+	focused = false
+	print(focused)
+	get_parent().scale = Vector2(1,1)
+	get_parent().self_modulate = Color(1,1,1)
+	pass # Replace with function body.
+
 
 
 
