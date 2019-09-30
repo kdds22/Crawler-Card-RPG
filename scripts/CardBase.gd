@@ -44,16 +44,16 @@ func set_cristais(value : String) -> void:
 	match value:
 		"Ação":
 			cristal_rect(Rect2(16,0,16,16), Rect2(16,16,16,16)) # vermelho
-			my_moldure_color = Color(.8,.2,.2,1)
+			my_moldure_color = Color(1.5,.05,.05,255)
 		"Arma":
 			cristal_rect(Rect2(32,0,16,16), Rect2(32,16,16,16)) # verde
-			my_moldure_color = Color(.2,.8,.2,1)
+			my_moldure_color = Color(.05,1.5,.05,1)
 		"Local":
 			cristal_rect(Rect2(0,0,16,16), Rect2(0,16,16,16)) # azul
-			my_moldure_color = Color(.2,.2,.8,1)
+			my_moldure_color = Color(.05,.05,1.5,1)
 		"Player":
 			cristal_rect(Rect2(48,0,16,16), Rect2(48,16,16,16)) # amarelo
-			my_moldure_color = Color(.8,.8,.2,1)
+			my_moldure_color = Color(1.5,1.5,.05,1)
 	
 	pass # func set_cristais
 
