@@ -1,7 +1,7 @@
 extends Node2D
 
 
-onready var pre_card_base = preload("res://scenes/CardBase.tscn") 
+onready var pre_card_base = preload("res://scenes/CardBase.tscn")
 onready var all_pos = $Cards.get_children()
 
 
@@ -12,7 +12,7 @@ func _ready() -> void:
 	for i in all_pos:
 		#print(i.get_groups()) # printa o grupo do respectivo Node
 		start_pre_card_base(i)
-	
+
 	pass # func _ready
 
 
@@ -22,17 +22,18 @@ func start_pre_card_base(pos_table : Position2D):
 	var card_base = pre_card_base.instance()
 #	card_base.position = pos_table.position
 	var card_config = CardManager.get_card_type(str(pos_table.get_groups()[0]))
-	card_base.set_image_type(str(card_config["Image"]))
-	card_base.set_name_type(str(card_config["Type"]))
-	card_base.set_name_desc(str(card_config["Name"]))
+	print(card_config)
+	
+	card_base.set_card_atributes(card_config)
+	"""
+	card_base.set_image_type(str(card_config[\"Image\"]))
+	card_base.set_name_type(str(card_config[\"Type\"]))
+	card_base.set_name_desc(str(card_config[\"Name\"]))
+	"""
 	card_base.add_to_group(str(pos_table.get_groups()[0]))
 	card_base.my_index_table = pos_table.get_index()
-	
+
 	$CardsTable.get_child(pos_table.get_index()).add_child(card_base)
 #	$CardsTable.add_child(card_base)
-	
+
 	pass # func start_pre_card_base
-
-
-
-
