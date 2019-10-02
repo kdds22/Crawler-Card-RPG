@@ -51,6 +51,7 @@ func set_info_card(card : Dictionary) -> void:
 	card_has_item = card["Has_Item"]
 	my_moldure_color = card["Moldure_Color"]
 	my_index_table = card["Index"]
+	set_card_atributes(get_info_card())
 
 
 func clean_info_card():
@@ -81,6 +82,7 @@ func _ready() -> void:
 		if i != 'root_canvas131' and i != '_vp_input1118':
 			print("Grupo da Carta -> "+i)
 	pass # func _ready
+
 
 
 func set_card_atributes(value : Dictionary):
