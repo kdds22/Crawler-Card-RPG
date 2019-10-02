@@ -1,16 +1,26 @@
 extends Node
 
+
+
 const LOCAL_MAX = 10
+
+
 var local_qtd : int = 0
+
+
 
 ############# Actual Cards #############
 var actual_card_local : String
 ############# Actual Cards #############
 
 
+
+
+
 # Simula um dado de 100 lados [D100]
 func get_chance() -> int:
 	return int(rand_range(1,100))
+	
 	pass # func get_chance
 
 
@@ -19,6 +29,7 @@ func get_local_or_item() -> String:
 	if get_chance() <= 70:
 		return "Local"
 	else: return "Item"
+	
 	pass # func get_local_or_item
 
 
@@ -31,4 +42,5 @@ func set_actual_local_card(value : Dictionary) -> bool:
 		local_qtd = 0
 		return true
 	else: return false
+	
 	pass # func set_actual_local_card

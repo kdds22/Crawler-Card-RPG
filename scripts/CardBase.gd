@@ -22,9 +22,11 @@ var my_index_table = 0
 
 
 
-var focused = false
+var focused = false # usado pra indicar uma carta
 
 
+# PEGA todas as informações da Carta
+# Retorna um dicionario de atributos
 func get_info_card() -> Dictionary:
 	var info : Dictionary
 	info["Type"] = card_type
@@ -37,9 +39,12 @@ func get_info_card() -> Dictionary:
 	info["Has_Item"] = card_has_item
 	info["Moldure_Color"] = my_moldure_color
 	info["Index"] = my_index_table
-	return info
+	
+	return info  # func get_info_card
 
 
+# SETar todos os atributos para a nova carta
+# Dicionario -> Local_Variaveis
 func set_info_card(card : Dictionary) -> void:
 	card_type = card["Type"]
 	card_name = card["Name"]
@@ -52,9 +57,12 @@ func set_info_card(card : Dictionary) -> void:
 	my_moldure_color = card["Moldure_Color"]
 	my_index_table = card["Index"]
 	set_card_atributes(get_info_card())
+	
+	pass # func set_info_card
 
 
-func clean_info_card():
+# LIMPA todos os atributos da carta
+func clean_info_card() -> void:
 	card_type = ""
 	card_name = ""
 	card_image = ""
@@ -63,43 +71,54 @@ func clean_info_card():
 	card_distance_goal = 0
 	card_distance_special_item = 0
 	card_has_item = false
+	
+	pass # func clean_info_card
 
+
+# Função pra Executar qualquer ação de "entrada" sobre a carta
+# Normalmente ações com o Mouse
 func _input(event):
 	if event.is_action_pressed("click"):
 		if focused and event is InputEventMouseButton:
-			print("Tipo: " + card_type + " - Nome: " + card_name)
+			print()
+			print()
+			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups()[1])
 			if card_type == "Local":
 #				CardManager.local_card_clicked(card_name)
 				get_node("../../..").card_clicked(self) # MainCore.gd
 #			print(event)
-	pass
+	
+	pass # func _input
 
 
+# Chamado ao Instanciar uma Carta
 func _ready() -> void:
-
-	print(get_parent().name+" - ",my_index_table)
+	print("Instanciado em: " + get_parent().name+" - do Index: ",my_index_table)
 	for i in self.get_groups():
 		if i != 'root_canvas131' and i != '_vp_input1118':
-			print("Grupo da Carta -> "+i)
+			print("Pertence ao Grupo -> "+i)
+	
 	pass # func _ready
 
 
-
-func set_card_atributes(value : Dictionary):
+# SETa TODAS as informações/atributos da Carta
+# Chamando todas as funções individuais pra cada atributo
+func set_card_atributes(value : Dictionary) -> void:
 	clean_info_card()
-	print("Value Cards -> ", value)
+	print("Value Cards -> ", value["Name"], " - ", value["Index"], " - ", value["Description"])
 	set_name_type(value["Type"])
 	set_image_type(value["Image"])
 	set_name_desc(value["Name"])
-	pass
+	
+	pass # func set_card_atributes
 
 
 #SET-GET do NOME da Carta
-func set_name_type(value : String):
+func set_name_type(value : String) -> void:
 	card_type = value
 	$Sprite/NameType.text = value
 	set_cristais(value)
-func get_name_type():
+func get_name_type() -> String:
 	return $Sprite/NameType.text
 
 
@@ -114,9 +133,10 @@ func set_image_type(value) -> void:
 
 
 #SETagem da DESCRICAO da Carta
-func set_name_desc(value : String):
+func set_name_desc(value : String) -> void:
 	card_name = value
 	$Sprite/NameDesc.text = value
+	
 	pass # func set_name_desc
 
 
@@ -152,8 +172,9 @@ func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 func _on_CardBase_mouse_entered() -> void:
 	focused = true
 #	print(focused)
-	get_parent().scale = Vector2(1.1,1.1)
+	get_parent().scale = Vector2(1.2,1.2)
 	get_parent().self_modulate = my_moldure_color
+	
 	pass # Replace with function body.
 
 
@@ -161,6 +182,10 @@ func _on_CardBase_mouse_entered() -> void:
 func _on_CardBase_mouse_exited() -> void:
 	focused = false
 #	print(focused)
-	get_parent().scale = Vector2(1,1)
+	get_parent().scale = Vector2(1.1,1.1)
 	get_parent().self_modulate = Color(1,1,1)
+	
 	pass # Replace with function body.
+
+
+

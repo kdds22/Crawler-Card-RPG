@@ -1,5 +1,6 @@
 extends Node
 
+
 #########################################################################################################
 # Pré-Carregamento
 #########################################################################################################
@@ -23,41 +24,51 @@ onready var image_item_weapon = ["res://assets/arma/arco.png",
 
 func _ready() -> void:
 	randomize()
-
+	
 	pass # func _ready
 
 
+
 # retorna um VECTOR2 com uma IMAGEM, o TIPO e um NOME para um especifico tipo de Carta
-func get_card_type(value : String):
+func get_card_type(value : String, index : int):
 
 	# Retorna uma ARMA
 	if value == "leftArm" or value == "rightArm":
-		return random_weapon()
+		return random_weapon(index)
+		
 		pass # if value Arm
+
 
 	# Retorna um INIMIGO ou uma POCAO
 	if value == "leftAction" or value == "rightAction":
-		return random_action()
+		return random_action(index)
+		
 		pass # if value Action
+
 
 	# Retorna um LOCAL [Floresta ou Dungeon]
 	if value == "leftMove" or value == "rightMove" or value == "middleMove":
-		return random_local()
+		return random_local(index)
+		
 		pass # if value Move
+
 
 	# Retorna um personagem [Guerreiro, Mago, Ladino], setado previamente numa variavel Global
 	if value == "player":
-		return random_player()
+		return random_player(index)
 		pass # if value player
 
 	pass # func get_card_type
 
 
-#################################
-# Array_Default = [Tipo, Nome, Imagem]
-#################################
+
+##################################################################
+# Array_Default = [Tipo, Nome, Imagem, Powe, Distance_Goal,
+#					Description, Distance_Special_Item, Has_Item
+#					Moldure_Color, Index]
+##################################################################
 # Retorna uma Arma aleatoria
-func random_weapon() -> Dictionary:
+func random_weapon(index : int) -> Dictionary:
 	var type := "Weapon"
 	var name : String
 	var image : String
@@ -68,14 +79,16 @@ func random_weapon() -> Dictionary:
 	elif weapon_chance >= 50:
 		name = "Axe"
 		image = image_item_weapon[1]
+	
 	return {"Type" : type, "Name" : name, "Image" : image,
 	"Power" : 0, "Distance_Goal" : 0, "Description" : "",
 	"Distance_Special_Item" : 0, "Has_Item" : false, 
-	"Moldure_Color" : Color(.05,1.5,.05,1), "Index" : 0}
-	#pass # func random_weapon
+	"Moldure_Color" : Color(.05,1.5,.05,1), "Index" : index}
+	# func random_weapon
+
 
 # Retorna uma Ação (Monstro/Poção) aleatoria
-func random_action() -> Dictionary:
+func random_action(index : int) -> Dictionary:
 	var type := "Action"
 	var name : String
 	var image : String
@@ -91,15 +104,16 @@ func random_action() -> Dictionary:
 		elif potion_chance >= 50:
 			name = "Sun"
 			image = image_action_potion[1]
+	
 	return {"Type" : type, "Name" : name, "Image" : image, 
 	"Power" : 0, "Distance_Goal" : 0, "Description" : "",
 	"Distance_Special_Item" : 0, "Has_Item" : false, 
-	"Moldure_Color" : Color(1.5,.05,.05,1), "Index" : 0}
-	#pass # func random_action
+	"Moldure_Color" : Color(1.5,.05,.05,1), "Index" : index}
+	# func random_action
 
 
 # Retorna um Local aleatorio
-func random_local() -> Dictionary:
+func random_local(index : int) -> Dictionary:
 	var type := "Local"
 	var name : String
 	var image : String
@@ -110,15 +124,16 @@ func random_local() -> Dictionary:
 	elif local_chance >= 50:
 		name = "Forest"
 		image = image_local[1]
+	
 	return {"Type" : type, "Name" : name, "Image" : image, 
 	"Power" : 0, "Distance_Goal" : 0, "Description" : "",
 	"Distance_Special_Item" : 0, "Has_Item" : false, 
-	"Moldure_Color" : Color(.05,.05,1.5,1), "Index" : 0}
-	#pass # func random_local
+	"Moldure_Color" : Color(.05,.05,1.5,1), "Index" : index}
+	# func random_local
 
 
 # Retorna um Personagem Aleatório
-func random_player() -> Dictionary:
+func random_player(index : int) -> Dictionary:
 	var type := "Player"
 	var name : String
 	var image : String
@@ -126,11 +141,12 @@ func random_player() -> Dictionary:
 	if player_chance >= 0:
 		name = "Warrior"
 		image = image_player[0]
+	
 	return {"Type" : type, "Name" : name, "Image" : image, 
 	"Power" : 0, "Distance_Goal" : 0, "Description" : "",
 	"Distance_Special_Item" : 0, "Has_Item" : false, 
-	"Moldure_Color" : Color(1.5,1.5,.05,1), "Index" : 0}
-	#pass func random_player
+	"Moldure_Color" : Color(1.5,1.5,.05,1), "Index" : index} 
+	# func random_player
 
 
 # Chamado ao clicar em uma Carta de Movimentação (LOCAL)
@@ -141,12 +157,12 @@ func local_card_clicked(value : Dictionary, pos_table : Sprite) -> Dictionary:
 	if pre_local_change:
 		var local_or_item = CoreSystemManager.get_local_or_item()
 		if local_or_item == "Local":
-			return_local = random_local()
+			return_local = random_local(pos_table.get_index())
 		elif local_or_item == "Item": # chamar um ITEM ao inves de um LOCAL (futuramente)
-			return_local = random_local()
+			return_local = random_local(pos_table.get_index())
 	else:
 		value["Index"] = pos_table.get_index()
 		return_local = value
 	print("Return Local ----> ",value["Index"], " - ", value["Image"], " - ", value["Name"])
-	return return_local
-#	pass # func local_card_clicked
+	
+	return return_local # func local_card_clicked
