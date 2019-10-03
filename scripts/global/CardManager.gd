@@ -198,10 +198,15 @@ func local_card_clicked(value : Dictionary, pos_table : Sprite, focused : bool) 
 	
 	var return_array_local : Array = []
 	var return_local : Dictionary = {}
+	var actual_card_info : Dictionary
 	
 	var j = 0
+	
+	return_array_local.clear()
+	
 	for i in ref_move:
 		return_local = {}
+		print(i," / ref_move")
 		var pre_local_change = CoreSystemManager.set_actual_local_card(value)
 		print("Local Change?  ",pre_local_change)
 		
@@ -215,32 +220,19 @@ func local_card_clicked(value : Dictionary, pos_table : Sprite, focused : bool) 
 		
 		else:
 #			value["Index"] = pos_table.get_index()
-			value["Index"] = ref_move[i]["Index"]
-			value["Group"] = ref_move[i]["Group"]
+#			value["Index"] = ref_move[i]["Index"]
+#			value["Group"] = ref_move[i]["Group"]
+			value = ref_move[i]
 #			value = ref_move[i]
 			
 			print(ref_move[i]["Name"], " >> ",ref_move[i]["Index"], " >> ", value["Index"])
 			return_local  = value
 			print("Return Local ----> ",return_local["Index"], " - ", return_local["Name"], " - ", return_local["Group"])
 		
-		print()
-		print(return_local)
-		print()
 		return_array_local.append(return_local)
-		print()
-		print(return_array_local[j])
-		print("Appended")
-		print()
-		
-		print("Return Value ----> ",value["Index"], " - ", value["Name"], " - ", value["Group"])
-		print("Return Array ----> ",return_array_local[j]["Index"], " - ", return_array_local[j]["Name"], " - ", return_array_local[j]["Group"])
-		j += 1
 	
-	for i in len(return_array_local):
-		print(return_array_local[i])
-	print()
-	print("Antes de ENVIAR::::::: ", return_array_local)
-	print()
+	j += 1
+	
 	return return_array_local # func local_card_clicked
 
 

@@ -81,7 +81,7 @@ func remove_card(card : RigidBody2D) -> void:
 		card.get_parent().self_modulate = Color(1,1,1)
 		card.get_node("Anim").play("out")
 		yield(card.get_node("Anim"), "animation_finished")
-		card.queue_free()
+		print(card.get_info_card())
 	
 	pass # func remove_Card
 

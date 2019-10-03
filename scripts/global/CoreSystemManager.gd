@@ -36,7 +36,8 @@ func get_local_or_item() -> String:
 # SETa qual é a Carta de Movimentação Atual
 # Contador de Local_Cards
 func set_actual_local_card(value : Dictionary) -> bool:
-	actual_card_local = value["Type"]
+	actual_card_local = value["Name"]
+	print("actual_card_local: ",actual_card_local)
 	local_qtd += 1
 	if local_qtd >= LOCAL_MAX:
 		local_qtd = 0

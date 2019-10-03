@@ -95,7 +95,6 @@ func _input(event):
 			print()
 			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups())
 			if card_type == "Local":
-#				CardManager.local_card_clicked(card_name)
 				get_node("../../..").card_clicked(self) # MainCore.gd
 #			print(event)
 	
