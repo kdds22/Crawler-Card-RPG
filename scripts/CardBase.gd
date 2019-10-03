@@ -15,11 +15,18 @@ var card_has_item : bool = false
 
 var my_moldure_color : Color
 var my_index_table = 0
+
+var my_group : String
 # =====================================================
 # Fim da Propriedade das Cartas
 # =====================================================
 
 
+func call_anim():
+	$Anim.play("out")
+	yield($Anim, "animation_finished")
+	queue_free()
+	pass
 
 
 var focused = false # usado pra indicar uma carta
@@ -39,6 +46,7 @@ func get_info_card() -> Dictionary:
 	info["Has_Item"] = card_has_item
 	info["Moldure_Color"] = my_moldure_color
 	info["Index"] = my_index_table
+	info["Group"] = my_group
 	
 	return info  # func get_info_card
 
@@ -56,6 +64,7 @@ func set_info_card(card : Dictionary) -> void:
 	card_has_item = card["Has_Item"]
 	my_moldure_color = card["Moldure_Color"]
 	my_index_table = card["Index"]
+	my_group = card["Group"]
 	set_card_atributes(get_info_card())
 	
 	pass # func set_info_card
@@ -71,6 +80,9 @@ func clean_info_card() -> void:
 	card_distance_goal = 0
 	card_distance_special_item = 0
 	card_has_item = false
+	my_moldure_color = Color.black
+	my_index_table = 0
+	my_group = ""
 	
 	pass # func clean_info_card
 
@@ -81,8 +93,7 @@ func _input(event):
 	if event.is_action_pressed("click"):
 		if focused and event is InputEventMouseButton:
 			print()
-			print()
-			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups()[1])
+			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups())
 			if card_type == "Local":
 #				CardManager.local_card_clicked(card_name)
 				get_node("../../..").card_clicked(self) # MainCore.gd
@@ -93,10 +104,9 @@ func _input(event):
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
-	print("Instanciado em: " + get_parent().name+" - do Index: ",my_index_table)
 	for i in self.get_groups():
 		if i != 'root_canvas131' and i != '_vp_input1118':
-			print("Pertence ao Grupo -> "+i)
+			print(card_name, " Pertence ao Grupo -> "+i)
 	
 	pass # func _ready
 
@@ -105,12 +115,27 @@ func _ready() -> void:
 # Chamando todas as funções individuais pra cada atributo
 func set_card_atributes(value : Dictionary) -> void:
 	clean_info_card()
-	print("Value Cards -> ", value["Name"], " - ", value["Index"], " - ", value["Description"])
 	set_name_type(value["Type"])
 	set_image_type(value["Image"])
 	set_name_desc(value["Name"])
-	
+	set_card_group(value["Group"])
+	set_card_index(value["Index"])
 	pass # func set_card_atributes
+
+
+#SETa o INDEX (do "parent") correspondente na MESA
+func set_card_index(value : int):
+	my_index_table = value
+	
+	pass # func set_card_index
+
+
+#SETa um grupo a Carta
+func set_card_group(value : String) -> void:
+	if not value == null:
+		add_to_group(value)
+		my_group = value
+	pass # func set_card_group
 
 
 #SET-GET do NOME da Carta

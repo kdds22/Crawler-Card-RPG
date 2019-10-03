@@ -30,8 +30,7 @@ func start_pre_card_base(pos_table : Position2D):
 	var pos_group = str(pos_table.get_groups()[0])
 	var card_base = pre_card_base.instance()
 #	card_base.position = pos_table.position
-	var card_config = CardManager.get_card_type(pos_group, pos_table.get_index())
-	print("Card Config: ",card_config["Name"], " - ", card_config["Index"])
+	var card_config = CardManager.get_card_type(pos_group, pos_table.get_index(), false)
 
 	card_base.set_card_atributes(card_config)
 	card_base.add_to_group(str(pos_table.get_groups()[0]))
@@ -45,29 +44,31 @@ func start_pre_card_base(pos_table : Position2D):
 # Chama o Gerenciador de Cartas para a proxima ação
 func card_clicked(card : RigidBody2D) -> void:
 	print("")
-	print("")
 	var info = card.get_info_card() # printa a INFO da Carta
-	print("Info Card Clicked: ",info["Name"], info["Image"], card.get_parent())
-	var new_card : Dictionary
+	var new_card : Array
 	if info["Type"] == "Local":
-		new_card = CardManager.local_card_clicked(info, card.get_parent())
-		add_new_card(new_card, card.get_parent())
-		remove_card(card)
-		print("Nova Carta: ", new_card["Name"], " - ", new_card["Image"])
+		new_card = CardManager.local_card_clicked(info, card.get_parent(), card.focused)
+		print("N O V A   C A R T A ====> ",new_card)
+		for i in len(new_card):
+			
+			add_new_card(new_card[i], card.get_parent(), new_card[i]["Index"])
 	
 	pass # func card_clicked
 
 
 # Adiciona uma Carta na Mesa
-func add_new_card(card : Dictionary, pos_table : Sprite):
-	print("Add New Card: ",card["Type"], "-", card["Name"], "-", card["Image"])
+func add_new_card(card : Dictionary, pos_table : Sprite, index : int):
+	call_new_locals()
+	print(card)
 	if card["Type"] == "Local":
-		print("Pos Table: ",pos_table)
+		print("entrei pra por a carta")
 		var card_base = pre_card_base.instance()
 		card_base.set_info_card(card)
 #		$CardsTable.get_child(pos_table.get_index()).add_child(card_base)
-		pos_table.add_child(card_base)
-		print("Card Base INFO: ", card_base.get_info_card()["Name"], " - ",card_base.get_info_card()["Image"])
+		print("Index da Nova Carta: ", card["Index"])
+#		pos_table.add_child(card_base)
+		$CardsTable.get_child(index).add_child(card_base)
+	
 	
 	pass # func add_new_card
 
@@ -78,6 +79,17 @@ func remove_card(card : RigidBody2D) -> void:
 		card.focused = false
 		card.get_parent().scale = Vector2(1,1)
 		card.get_parent().self_modulate = Color(1,1,1)
+		card.get_node("Anim").play("out")
+		yield(card.get_node("Anim"), "animation_finished")
 		card.queue_free()
 	
 	pass # func remove_Card
+
+
+
+func call_new_locals():
+	for i in CardManager.ref_move:
+		remove_card($CardsTable.get_child(CardManager.ref_move[i]["Index"]).get_child(0))
+	pass
+	
+	
