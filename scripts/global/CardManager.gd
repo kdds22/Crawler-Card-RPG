@@ -17,19 +17,21 @@ onready var image_item_weapon = ["res://assets/arma/arco.png",
 #########################################################################################################
 # Fim do Pré-Carregamento
 #########################################################################################################
-
-##################################################################
+#########################################################################################################
+#########################################################################################################
 # Armazenar Referencia da Carta Instanciada
-##################################################################
+#########################################################################################################
+
 var ref_player
 var ref_left_arm
 var ref_right_arm
 var ref_left_action
 var ref_right_action
 var ref_move = {"ref_left_move" : {}, "ref_middle_move" : {}, "ref_right_move" : {}}
-##################################################################
+
+#########################################################################################################
 # Fim do Armazenamento da Referencia
-##################################################################
+#########################################################################################################
 
 
 
@@ -222,7 +224,9 @@ func random_local(info : Dictionary, change : bool) -> Dictionary:
 		image = CoreSystemManager.actual_card_local["Image"]
 	var local = return_card_info(type, name, image, info["Group"], 0, "", false, Color(.05,.05,1.5,1), info["Index"], 0, 0)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
-	
+	print()
+	print("random local -> ", info)
+	print()
 	match info["Group"]:
 		"rightMove" : ref_move["ref_right_move"] = local
 		"leftMove" : ref_move["ref_left_move"] = local
@@ -236,6 +240,7 @@ func random_local(info : Dictionary, change : bool) -> Dictionary:
 
 # Chamado ao clicar em uma Carta de Movimentação (LOCAL)
 func local_card_clicked(value : Dictionary, pos_table : Sprite, focused : bool) -> Array:
+	CoreSystemManager.set_actual_local_card(value)
 	
 	var return_array_local : Array = []
 	var return_local : Dictionary = {}
@@ -243,7 +248,7 @@ func local_card_clicked(value : Dictionary, pos_table : Sprite, focused : bool) 
 	for i in ref_move:
 		return_local = {}
 		
-		var pre_local_change = CoreSystemManager.set_actual_local_card(value)
+		var pre_local_change = CoreSystemManager.get_local_change()
 		print("Pre_local_change >>>>> ",pre_local_change)
 		if pre_local_change:
 #		if CoreSystemManager.set_actual_local_card(value):
