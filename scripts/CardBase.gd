@@ -22,13 +22,6 @@ var my_group : String
 # =====================================================
 
 
-func call_anim():
-	$Anim.play("out")
-	yield($Anim, "animation_finished")
-	queue_free()
-	pass
-
-
 var focused = false # usado pra indicar uma carta
 
 
@@ -92,8 +85,8 @@ func clean_info_card() -> void:
 func _input(event):
 	if event.is_action_pressed("click"):
 		if focused and event is InputEventMouseButton:
-			print()
-			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups())
+#			print("______________ Input CARD _______________")
+#			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups())
 			if card_type == "Local":
 				get_node("../../..").card_clicked(self) # MainCore.gd
 #			print(event)
@@ -105,7 +98,8 @@ func _input(event):
 func _ready() -> void:
 	for i in self.get_groups():
 		if i != 'root_canvas131' and i != '_vp_input1118':
-			print(card_name, " Pertence ao Grupo -> "+i)
+#			print(card_name, " Pertence ao Grupo -> "+i)
+			pass
 	
 	pass # func _ready
 
@@ -195,7 +189,6 @@ func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 # Referencia a Carta que esta sendo FOCADA
 func _on_CardBase_mouse_entered() -> void:
 	focused = true
-#	print(focused)
 	get_parent().scale = Vector2(1.2,1.2)
 	get_parent().self_modulate = my_moldure_color
 	
@@ -205,11 +198,18 @@ func _on_CardBase_mouse_entered() -> void:
 # Referencia a Carta que esta sendo "DES"FOCADA
 func _on_CardBase_mouse_exited() -> void:
 	focused = false
-#	print(focused)
 	get_parent().scale = Vector2(1.1,1.1)
 	get_parent().self_modulate = Color(1,1,1)
 	
 	pass # Replace with function body.
 
 
+# Ativa uma ANIMAÇÂO de IN-OUT na carta, prestes a ser excluida do jogo
+func call_anim_out() -> void:
+	if focused:
+		$Anim.play("out")
+	else:
+		$Anim.play("out_2")
+	
+	pass # func call_anim_out
 

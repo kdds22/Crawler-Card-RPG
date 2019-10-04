@@ -11,8 +11,6 @@ onready var all_local_index = [5,6,7]
 
 
 
-
-
 # Para cada Position2D dentro de $Cards,
 # instancia uma carta base (CardBase)
 func _ready() -> void:
@@ -30,7 +28,7 @@ func start_pre_card_base(pos_table : Position2D):
 	var pos_group = str(pos_table.get_groups()[0])
 	var card_base = pre_card_base.instance()
 #	card_base.position = pos_table.position
-	var card_config = CardManager.get_card_type(pos_group, pos_table.get_index(), false)
+	var card_config = CardManager.get_card_type_start(pos_group, pos_table.get_index(), false)
 
 	card_base.set_card_atributes(card_config)
 	card_base.add_to_group(str(pos_table.get_groups()[0]))
@@ -48,9 +46,8 @@ func card_clicked(card : RigidBody2D) -> void:
 	var new_card : Array
 	if info["Type"] == "Local":
 		new_card = CardManager.local_card_clicked(info, card.get_parent(), card.focused)
-		print("N O V A   C A R T A ====> ",new_card)
+#		print("N O V A   C A R T A ====> ",new_card)
 		for i in len(new_card):
-			
 			add_new_card(new_card[i], card.get_parent(), new_card[i]["Index"])
 	
 	pass # func card_clicked
@@ -59,16 +56,18 @@ func card_clicked(card : RigidBody2D) -> void:
 # Adiciona uma Carta na Mesa
 func add_new_card(card : Dictionary, pos_table : Sprite, index : int):
 	call_new_locals()
-	print(card)
+	
+	print()
+	
 	if card["Type"] == "Local":
-		print("entrei pra por a carta")
 		var card_base = pre_card_base.instance()
 		card_base.set_info_card(card)
 #		$CardsTable.get_child(pos_table.get_index()).add_child(card_base)
-		print("Index da Nova Carta: ", card["Index"])
+#		print("Index da Nova Carta: ", card["Index"])
 #		pos_table.add_child(card_base)
 		$CardsTable.get_child(index).add_child(card_base)
 	
+		print()
 	
 	pass # func add_new_card
 
@@ -76,20 +75,22 @@ func add_new_card(card : Dictionary, pos_table : Sprite, index : int):
 # Remove a Carta da Mesa
 func remove_card(card : RigidBody2D) -> void:
 	if card.card_type == "Local":
-		card.focused = false
+#		card.focused = false
 		card.get_parent().scale = Vector2(1,1)
 		card.get_parent().self_modulate = Color(1,1,1)
-		card.get_node("Anim").play("out")
-		yield(card.get_node("Anim"), "animation_finished")
-		print(card.get_info_card())
+		card.call_anim_out()
+#		card.get_node("Anim").play("out")
+#		yield(card.get_node("Anim"), "animation_finished")
 	
 	pass # func remove_Card
 
 
 
-func call_new_locals():
+# funcao criada pra chamar Novas CARTAS-LOCAIS
+func call_new_locals() -> void:
 	for i in CardManager.ref_move:
 		remove_card($CardsTable.get_child(CardManager.ref_move[i]["Index"]).get_child(0))
-	pass
+	
+	pass # func call_new_locals
 	
 	
