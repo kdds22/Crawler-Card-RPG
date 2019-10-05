@@ -23,6 +23,7 @@ var my_group : String
 
 
 var focused = false # usado pra indicar uma carta
+var clicked = false # usado como um FLAG de clique unico
 
 
 # PEGA todas as informações da Carta
@@ -87,8 +88,9 @@ func _input(event):
 		if focused and event is InputEventMouseButton:
 #			print("______________ Input CARD _______________")
 #			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups())
-			if card_type == "Local":
+			if card_type == "Local" and clicked == false:
 				get_node("../../..").card_clicked(self) # MainCore.gd
+				clicked = true
 #			print(event)
 	
 	pass # func _input
@@ -96,6 +98,7 @@ func _input(event):
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
+	pickable(false)
 	for i in self.get_groups():
 		if i != 'root_canvas131' and i != '_vp_input1118':
 #			print(card_name, " Pertence ao Grupo -> "+i)
@@ -213,3 +216,8 @@ func call_anim_out() -> void:
 	
 	pass # func call_anim_out
 
+
+
+func pickable(value : bool) -> void:
+	input_pickable = value
+	pass

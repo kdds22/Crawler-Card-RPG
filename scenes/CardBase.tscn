@@ -60,7 +60,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 resource_name = "out_2"
 length = 0.5
 tracks/0/type = "value"
@@ -102,8 +102,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "start"
+[sub_resource type="Animation" id=6]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 1
@@ -128,9 +127,22 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ true ],
+"method": "pickable"
+} ]
+}
 
 [node name="CardBase" type="RigidBody2D"]
-scale = Vector2( 1e-005, 1e-005 )
 input_pickable = true
 mode = 1
 script = ExtResource( 1 )
@@ -231,7 +243,7 @@ shape = SubResource( 3 )
 [node name="Anim" type="AnimationPlayer" parent="."]
 autoplay = "start"
 anims/out = SubResource( 4 )
-anims/out_2 = SubResource( 6 )
-anims/start = SubResource( 5 )
+anims/out_2 = SubResource( 5 )
+anims/start = SubResource( 6 )
 [connection signal="mouse_entered" from="." to="." method="_on_CardBase_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_CardBase_mouse_exited"]
