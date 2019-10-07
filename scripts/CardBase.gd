@@ -116,6 +116,7 @@ func set_card_atributes(value : Dictionary) -> void:
 	set_name_desc(value["Name"])
 	set_card_group(value["Group"])
 	set_card_index(value["Index"])
+	
 	pass # func set_card_atributes
 
 
@@ -217,7 +218,8 @@ func call_anim_out() -> void:
 	pass # func call_anim_out
 
 
-
+# Altera a possibilidade de poder clicar na carta
 func pickable(value : bool) -> void:
 	input_pickable = value
-	pass
+	
+	pass # func pickable

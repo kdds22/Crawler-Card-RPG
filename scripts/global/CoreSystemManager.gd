@@ -4,9 +4,9 @@ extends Node
 
 #####  [CONSTANTES] CONTROLE IMUTAVEL DO JOGO, SERÁ USADO COMO REFERENCIA DURANTE O GAMEPLAY #####
 
-const LOCAL_MAX = 10     # QUANTAS CARTAS-LOCAIS TERÃO DE APARECER PRA PODER "MUDAR" DE CENARIO
-const GOAL_MAX = 100     # [%] PORCENTAGEM MAXIMA DO OBJETIVO DA QUEST
-const SPECIAL_ITEM_MAX = 100     # [%] PORCENTAGEM MAXIMA DO ITEM ESPECIAL DA QUEST
+const LOCAL_MAX : int = 10     # QUANTAS CARTAS-LOCAIS TERÃO DE APARECER PRA PODER "MUDAR" DE CENARIO
+const GOAL_MAX : int = 100     # [%] PORCENTAGEM MAXIMA DO OBJETIVO DA QUEST
+const SPECIAL_ITEM_MAX : int = 100     # [%] PORCENTAGEM MAXIMA DO ITEM ESPECIAL DA QUEST
 
 #####  FIM DO CONTROLE IMUTAVEL #####
 
@@ -15,8 +15,9 @@ const SPECIAL_ITEM_MAX = 100     # [%] PORCENTAGEM MAXIMA DO ITEM ESPECIAL DA QU
 ##### CONTROLE MUTÁVEIS DO JOGO, SERÁ USADO PRA CONTROLAR AS INFORMAÇÕES COM BASE NAS CONSTANTES #####
 
 var local_qtd : int = 0
-var goal_distance = 0
-var special_item_distancE = 0
+var goal_distance : int = 0
+var special_item_distance : int = 0
+var actual_distance_difficulty : int = 0
 
 ##### FIM DO CONTROLE MUTÁVEL #####
 
@@ -70,3 +71,39 @@ func get_local_change() -> bool:
 	else: return false
 	
 	pass # func get_local_change
+
+
+# Usado pra escolher qual a dificuldade da QUEST escolhida
+func set_distance_difficulty(value : int) -> void:
+	actual_distance_difficulty = value
+	
+	pass # func set_distance_difficulty
+
+
+# Aproxima o jogador do Objetivo da Quest
+func increment_quest_distance() -> void:
+	goal_distance += actual_distance_difficulty
+	special_item_distance -= actual_distance_difficulty
+	if special_item_distance <= 0:
+		special_item_distance = 0
+	
+	pass # func increment_quest_distance
+
+
+# Aproxima o jogador de um Item Especial existente na QUest
+func increment_special_item_distance() -> void:
+	special_item_distance += actual_distance_difficulty
+	goal_distance -= actual_distance_difficulty
+	if goal_distance <= 0:
+		goal_distance = 0
+	
+	pass # func increment_special_item_distance
+
+
+func start_card_distance() -> void:
+	if get_chance() <= 50:
+		goal_distance = 51
+		special_item_distance = 49
+	else:
+		special_item_distance = 51
+		goal_distance = 49
