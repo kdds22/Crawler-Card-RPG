@@ -167,7 +167,9 @@ func start_random_local(index : int, group : String, change : bool) -> Dictionar
 		name = "Forest"
 		image = image_local[1]
 	
-	var local = return_card_info(type, name, image, group, 0, "", false, Color(.05,.05,1.5,1), index, 0, 0)
+	var start_distances : Array = CoreSystemManager.start_card_distance()
+	
+	var local = return_card_info(type, name, image, group, 0, "", false, Color(.05,.05,1.5,1), index, start_distances[0], start_distances[1])
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
 	match group:
@@ -195,7 +197,9 @@ func random_player(index : int, group : String, change : bool) -> Dictionary:
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
 	ref_player = player
+	
 	print()
+	
 #	print("Player Referencias: ", ref_player)
 	
 	return player
@@ -211,6 +215,14 @@ func random_local(info : Dictionary, change : bool) -> Dictionary:
 	var image : String
 	var local_chance : int
 	
+	if info["Distance_Goal"] > info["Distance_Special_Item"]:
+		CoreSystemManager.increment_quest_distance()
+	else:
+		CoreSystemManager.increment_special_item_distance()
+	
+	var distance_goal = CoreSystemManager.goal_distance
+	var distance_special_item = CoreSystemManager.special_item_distance
+	
 	if change:
 		local_chance = CoreSystemManager.get_chance()
 		if local_chance < 50:
@@ -222,7 +234,10 @@ func random_local(info : Dictionary, change : bool) -> Dictionary:
 	else:
 		name = CoreSystemManager.actual_card_local["Name"]
 		image = CoreSystemManager.actual_card_local["Image"]
-	var local = return_card_info(type, name, image, info["Group"], 0, "", false, Color(.05,.05,1.5,1), info["Index"], 0, 0)
+	
+	
+	
+	var local = return_card_info(type, name, image, info["Group"], 0, "", false, Color(.05,.05,1.5,1), info["Index"], distance_goal, distance_special_item)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	print()
 	print("random local -> ", info)

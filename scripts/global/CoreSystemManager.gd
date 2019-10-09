@@ -100,10 +100,12 @@ func increment_special_item_distance() -> void:
 	pass # func increment_special_item_distance
 
 
-func start_card_distance() -> void:
+# Inicializa valores para
+func start_card_distance() -> Array:
 	if get_chance() <= 50:
 		goal_distance = 51
 		special_item_distance = 49
 	else:
 		special_item_distance = 51
 		goal_distance = 49
+	return [goal_distance, special_item_distance]

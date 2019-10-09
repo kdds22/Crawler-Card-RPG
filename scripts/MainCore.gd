@@ -14,6 +14,9 @@ onready var all_local_index = [5,6,7]
 # Para cada Position2D dentro de $Cards,
 # instancia uma carta base (CardBase)
 func _ready() -> void:
+	
+	CoreSystemManager.set_distance_difficulty(5)
+	
 	randomize()
 	for i in all_pos:
 		#print(i.get_groups()) # printa o grupo do respectivo Node

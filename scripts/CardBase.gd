@@ -98,12 +98,22 @@ func _input(event):
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
+	$Sprite/TextureProgressGoal.value = card_distance_goal
+	$Sprite/TextureProgressItem.value = card_distance_special_item
 	pickable(false)
 	for i in self.get_groups():
 		if i != 'root_canvas131' and i != '_vp_input1118':
 #			print(card_name, " Pertence ao Grupo -> "+i)
 			pass
-	
+	if card_type == "Local":
+		print(card_distance_goal, " e ", card_distance_special_item)
+		if card_distance_goal > card_distance_special_item:
+			$Sprite/TextureProgressGoal/Anim.play("signal")
+		elif card_distance_goal < card_distance_special_item:
+			$Sprite/TextureProgressItem/Anim.play("signal")
+		else:
+			$Sprite/TextureProgressGoal/Anim.play("signal")
+			$Sprite/TextureProgressItem/Anim.play("signal")
 	pass # func _ready
 
 
@@ -116,8 +126,23 @@ func set_card_atributes(value : Dictionary) -> void:
 	set_name_desc(value["Name"])
 	set_card_group(value["Group"])
 	set_card_index(value["Index"])
+	set_card_distance_goal(value["Distance_Goal"])
+	set_card_distance_special_item(value["Distance_Special_Item"])
 	
 	pass # func set_card_atributes
+
+
+# SETa-GETa as distancias do Objetivo e de Itens Especiais
+func set_card_distance_goal(value : int) -> void:
+	card_distance_goal = value
+func get_card_distance_goal() -> int:
+	return card_distance_goal
+###################################################
+func set_card_distance_special_item(value : int) -> void:
+	card_distance_special_item = value
+func get_card_distance_special_item() -> int:
+	return card_distance_special_item
+# func SET-GET card_distance - goal/special_item
 
 
 #SETa o INDEX (do "parent") correspondente na MESA
