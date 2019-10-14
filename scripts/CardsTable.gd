@@ -1,8 +1,9 @@
-extends Node
+extends Node2D
 
 
 onready var all_pos = $"..".get_node("Cards").get_children()
 onready var pre_card_moldura = preload("res://scenes/CardSlot.tscn")
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

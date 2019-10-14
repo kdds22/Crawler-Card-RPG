@@ -16,7 +16,7 @@ font_data = ExtResource( 4 )
 [sub_resource type="DynamicFont" id=2]
 font_data = ExtResource( 4 )
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=3]
 resource_name = "signal"
 length = 2.0
 loop = true
@@ -32,29 +32,28 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
-
-[sub_resource type="Animation" id=8]
-resource_name = "signal"
-length = 2.0
-loop = true
-tracks/0/type = "value"
-tracks/0/path = NodePath("Signal:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0.5, 0.9, 1.3 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
-}
-
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 29, 46 )
 
 [sub_resource type="Animation" id=4]
-resource_name = "out"
+resource_name = "signal"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Signal:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.5, 0.9, 1.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 29, 46 )
+
+[sub_resource type="Animation" id=6]
 length = 0.8
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:scale")
@@ -95,8 +94,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "out_2"
+[sub_resource type="Animation" id=7]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:scale")
@@ -137,7 +135,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=8]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 1
@@ -260,7 +258,7 @@ texture = ExtResource( 8 )
 centered = false
 
 [node name="Anim" type="AnimationPlayer" parent="Sprite/TextureProgressGoal"]
-anims/signal = SubResource( 7 )
+anims/signal = SubResource( 3 )
 
 [node name="TextureProgressItem" type="TextureProgress" parent="Sprite"]
 anchor_left = 0.5
@@ -284,17 +282,16 @@ texture = ExtResource( 8 )
 centered = false
 
 [node name="Anim" type="AnimationPlayer" parent="Sprite/TextureProgressItem"]
-anims/signal = SubResource( 8 )
+anims/signal = SubResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( 0, -1 )
-shape = SubResource( 3 )
+shape = SubResource( 5 )
 
 [node name="Anim" type="AnimationPlayer" parent="."]
 autoplay = "start"
-anims/out = SubResource( 4 )
-anims/out_2 = SubResource( 5 )
-anims/start = SubResource( 6 )
+anims/out = SubResource( 6 )
+anims/out_2 = SubResource( 7 )
+anims/start = SubResource( 8 )
 [connection signal="mouse_entered" from="." to="." method="_on_CardBase_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_CardBase_mouse_exited"]

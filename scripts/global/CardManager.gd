@@ -100,15 +100,18 @@ func random_weapon(index : int, group : String, change : bool) -> Dictionary:
 	var type := "Weapon"
 	var name : String
 	var image : String
+	var description : String
 	var weapon_chance = CoreSystemManager.get_chance()
 	if weapon_chance < 50:
 		name = "Bow"
+		description = "Long"
 		image = image_item_weapon[0]
 	elif weapon_chance >= 50:
 		name = "Axe"
+		description = "Short"
 		image = image_item_weapon[1]
 	
-	var weapon = return_card_info(type, name, image, group, 0, "", false, Color(.05,1.5,.05,1), index, 0, 0)
+	var weapon = return_card_info(type, name, image, group, 0, description, false, Color(.05,1.5,.05,1), index, 0, 0)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
 	match group:
@@ -127,11 +130,14 @@ func random_action(index : int, group : String, change : bool) -> Dictionary:
 	var name : String
 	var image : String
 	var action_chance = CoreSystemManager.get_chance()
+	var description : String
 	if action_chance < 60:
 		name = "Ogre"
+		description = "Enemy"
 		image = image_action_monster[0]
-	elif action_chance >= 50:
+	elif action_chance >= 60:
 		var potion_chance = CoreSystemManager.get_chance()
+		description = "Potion"
 		if potion_chance < 50:
 			name = "Moon"
 			image = image_action_potion[0]
@@ -139,7 +145,7 @@ func random_action(index : int, group : String, change : bool) -> Dictionary:
 			name = "Sun"
 			image = image_action_potion[1]
 	
-	var action = return_card_info(type, name, image, group, 0, "", false, Color(1.5,.05,.05,1), index, 0, 0)
+	var action = return_card_info(type, name, image, group, 0, description, false, Color(1.5,.05,.05,1), index, 0, 0)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
 	match group:
@@ -158,18 +164,21 @@ func start_random_local(index : int, group : String, change : bool) -> Dictionar
 	var type := "Local"
 	var name : String
 	var image : String
+	var description : String
 	var local_chance : int
 	local_chance = CoreSystemManager.get_chance()
 	if local_chance < 50:
 		name = "Dungeon"
+		description = "Dark"
 		image = image_local[0]
 	elif local_chance >= 50:
 		name = "Forest"
+		description = "Light"
 		image = image_local[1]
 	
-	var start_distances : Array = CoreSystemManager.start_card_distance()
+	var start_distances : Array = CoreSystemManager.start_card_distance(false, 0)
 	
-	var local = return_card_info(type, name, image, group, 0, "", false, Color(.05,.05,1.5,1), index, start_distances[0], start_distances[1])
+	var local = return_card_info(type, name, image, group, 0, description, false, Color(.05,.05,1.5,1), index, start_distances[0], start_distances[1])
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
 	match group:
@@ -188,12 +197,14 @@ func random_player(index : int, group : String, change : bool) -> Dictionary:
 	var type := "Player"
 	var name : String
 	var image : String
+	var description : String
 	var player_chance = CoreSystemManager.get_chance()
 	if player_chance >= 0:
 		name = "Warrior"
+		description = "Melee"
 		image = image_player[0]
 	
-	var player = return_card_info(type, name, image, group, 0, "", false, Color(1.5,1.5,.05,1), index, 0, 0)
+	var player = return_card_info(type, name, image, group, 0, description, false, Color(1.5,1.5,.05,1), index, 0, 0)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
 	ref_player = player
@@ -207,22 +218,49 @@ func random_player(index : int, group : String, change : bool) -> Dictionary:
 
 
 # Retorna um Local aleatorio se puder 
-func random_local(info : Dictionary, change : bool) -> Dictionary:
+func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 #func random_local(index : int, group : String, change : bool) -> Dictionary:
+	
+	print()
+	print("Antes de continuar o Random_Local: Goal -> ",CoreSystemManager.goal_distance,", SpecialItem -> ",CoreSystemManager.special_item_distance)
+	print()
 	
 	var type := "Local"
 	var name : String
 	var image : String
 	var local_chance : int
 	
-	if info["Distance_Goal"] > info["Distance_Special_Item"]:
-		CoreSystemManager.increment_quest_distance()
+	var distance_goal : int = CoreSystemManager.goal_distance
+	var distance_special_item : int = CoreSystemManager.special_item_distance
+	
+	if info["Index"] == index:
+		print()
+		print("Focado ", info["Index"])
+		print()
+		if info["Distance_Goal"] > info["Distance_Special_Item"]:
+			CoreSystemManager.increment_quest_distance()
+			CoreSystemManager.actual_focus_distance = 0
+		else:
+			CoreSystemManager.increment_special_item_distance()
+			CoreSystemManager.actual_focus_distance = 1
+		
+		distance_goal = CoreSystemManager.goal_distance
+		distance_special_item = CoreSystemManager.special_item_distance
 	else:
-		CoreSystemManager.increment_special_item_distance()
-	
-	var distance_goal = CoreSystemManager.goal_distance
-	var distance_special_item = CoreSystemManager.special_item_distance
-	
+		print()
+		print("Não Focado: ", info["Index"])
+		print()
+		var goal_item
+		if info["Distance_Goal"] > info["Distance_Special_Item"]:
+			goal_item = 0
+		else:
+			goal_item = 1
+		var distance = CoreSystemManager.start_card_distance(true, goal_item)
+		distance_goal = distance[0]
+		distance_special_item = distance[1]
+	print()
+	print("Index: ",info["Index"], " - ",distance_goal, ", ", distance_special_item)
+	print()
 	if change:
 		local_chance = CoreSystemManager.get_chance()
 		if local_chance < 50:
@@ -254,7 +292,7 @@ func random_local(info : Dictionary, change : bool) -> Dictionary:
 
 
 # Chamado ao clicar em uma Carta de Movimentação (LOCAL)
-func local_card_clicked(value : Dictionary, pos_table : Sprite, focused : bool) -> Array:
+func local_card_clicked(value : Dictionary, pos_table : Sprite, index : int) -> Array:
 	CoreSystemManager.set_actual_local_card(value)
 	
 	var return_array_local : Array = []
@@ -271,15 +309,15 @@ func local_card_clicked(value : Dictionary, pos_table : Sprite, focused : bool) 
 			
 			if local_or_item == "Local":
 #				return_local = random_local(ref_move[i]["Index"], ref_move[i]["Group"], true)
-				return_local = random_local(ref_move[i], true)
+				return_local = random_local(ref_move[i], true, index)
 			elif local_or_item == "Item": # chamar um ITEM ao inves de um LOCAL (futuramente)
 #				return_local = random_local(ref_move[i]["Index"], ref_move[i]["Group"], true)
-				return_local = random_local(ref_move[i], true)
+				return_local = random_local(ref_move[i], true, index)
 		
 		else:
 			value = ref_move[i]
 #			return_local  = value
-			return_local = random_local(ref_move[i], false)
+			return_local = random_local(ref_move[i], false, index)
 #			return_local = random_local(ref_move[i]["Index"], ref_move[i]["Group"], false)
 		
 		return_array_local.append(return_local)

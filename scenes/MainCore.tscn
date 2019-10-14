@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/MainCore.gd" type="Script" id=1]
 [ext_resource path="res://scripts/CardsTable.gd" type="Script" id=2]
+[ext_resource path="res://scripts/Mouse.gd" type="Script" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 1.0
 
 [node name="MainCore" type="Node2D"]
 script = ExtResource( 1 )
@@ -51,5 +55,12 @@ position = Vector2( 360, 71 )
 ]]
 position = Vector2( 450, 71 )
 
-[node name="CardsTable" type="Node" parent="."]
+[node name="CardsTable" type="Node2D" parent="."]
 script = ExtResource( 2 )
+
+[node name="Mouse" type="Area2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mouse"]
+shape = SubResource( 1 )
+[connection signal="body_entered" from="Mouse" to="Mouse" method="_on_Mouse_body_entered"]

@@ -48,7 +48,7 @@ func card_clicked(card : RigidBody2D) -> void:
 	var info = card.get_info_card() # printa a INFO da Carta
 	var new_card : Array
 	if info["Type"] == "Local":
-		new_card = CardManager.local_card_clicked(info, card.get_parent(), card.focused)
+		new_card = CardManager.local_card_clicked(info, card.get_parent(), info["Index"])
 #		print("N O V A   C A R T A ====> ",new_card)
 		for i in len(new_card):
 			add_new_card(new_card[i], card.get_parent(), new_card[i]["Index"])

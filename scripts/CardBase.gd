@@ -21,6 +21,7 @@ var my_group : String
 # Fim da Propriedade das Cartas
 # =====================================================
 
+var initial_position : Vector2
 
 var focused = false # usado pra indicar uma carta
 var clicked = false # usado como um FLAG de clique unico
@@ -83,14 +84,34 @@ func clean_info_card() -> void:
 
 # Função pra Executar qualquer ação de "entrada" sobre a carta
 # Normalmente ações com o Mouse
-func _input(event):
+func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("click"):
 		if focused and event is InputEventMouseButton:
 #			print("______________ Input CARD _______________")
 #			print("Tipo: " + card_type + " - Nome: " + card_name + " - Grupos: " , self.get_groups())
-			if card_type == "Local" and clicked == false:
-				get_node("../../..").card_clicked(self) # MainCore.gd
-				clicked = true
+			if not clicked:
+				if card_type == "Local":
+					get_node("../../..").card_clicked(self) # MainCore.gd
+					clicked = true
+				if card_type == "Action":
+					print("Carta de AÇÃO -> ",card_name)
+					if card_description == "Potion":
+						clicked = true
+						z_index = 1
+				if card_type == "Weapon":
+					clicked = true
+					z_index = 1
+	if event.is_action_released("click"):
+		position = initial_position
+		clicked = false
+		focused = false
+		z_index = 0
+	if clicked and event is InputEventMouseMotion:
+		if card_type == "Weapon":
+#			global_position = get_node("/root/MainCore/Mouse").global_position
+			global_position = get_global_mouse_position()
+		if card_type == "Action" and card_description == "Potion":
+			global_position = get_global_mouse_position()
 #			print(event)
 	
 	pass # func _input
@@ -98,6 +119,7 @@ func _input(event):
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
+	print(position, name)
 	$Sprite/TextureProgressGoal.value = card_distance_goal
 	$Sprite/TextureProgressItem.value = card_distance_special_item
 	pickable(false)
@@ -124,6 +146,7 @@ func set_card_atributes(value : Dictionary) -> void:
 	set_name_type(value["Type"])
 	set_image_type(value["Image"])
 	set_name_desc(value["Name"])
+	set_description(value["Description"])
 	set_card_group(value["Group"])
 	set_card_index(value["Index"])
 	set_card_distance_goal(value["Distance_Goal"])
@@ -160,7 +183,7 @@ func set_card_group(value : String) -> void:
 	pass # func set_card_group
 
 
-#SET-GET do NOME da Carta
+#SET-GET do TIPO da Carta
 func set_name_type(value : String) -> void:
 	card_type = value
 	$Sprite/NameType.text = value
@@ -179,12 +202,19 @@ func set_image_type(value) -> void:
 	pass # func set_image_type
 
 
-#SETagem da DESCRICAO da Carta
+#SETagem do NOME da Carta
 func set_name_desc(value : String) -> void:
 	card_name = value
 	$Sprite/NameDesc.text = value
 	
 	pass # func set_name_desc
+
+
+#SETagem da DESCRICAO da Carta
+func set_description(value : String) -> void:
+	card_description = value
+	
+	pass # func set_description
 
 
 #SETagem dos CRISTAIS da Carta
@@ -227,6 +257,7 @@ func _on_CardBase_mouse_entered() -> void:
 # Referencia a Carta que esta sendo "DES"FOCADA
 func _on_CardBase_mouse_exited() -> void:
 	focused = false
+	clicked = false
 	get_parent().scale = Vector2(1.1,1.1)
 	get_parent().self_modulate = Color(1,1,1)
 	

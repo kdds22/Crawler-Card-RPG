@@ -19,6 +19,9 @@ var goal_distance : int = 0
 var special_item_distance : int = 0
 var actual_distance_difficulty : int = 0
 
+var actual_focus_distance : int = 0 # 0 = Goal , 1 = Special_Item
+
+
 ##### FIM DO CONTROLE MUTÁVEL #####
 
 ################################################################################################################
@@ -38,6 +41,13 @@ func get_chance() -> int:
 	return int(rand_range(1,100))
 	
 	pass # func get_chance
+
+
+func get_goal_or_specialItem() -> int:
+	if get_chance() <= 50:
+		actual_focus_distance = 1
+	else: actual_focus_distance = 0
+	return actual_focus_distance
 
 
 # Retorna a possibilidade de ser um Cenario ou um Item
@@ -101,11 +111,27 @@ func increment_special_item_distance() -> void:
 
 
 # Inicializa valores para
-func start_card_distance() -> Array:
+func start_card_distance(new : bool, goal_item : int) -> Array:
+	if new:
+		if goal_item == actual_focus_distance:
+			if actual_focus_distance == 0:
+				increment_quest_distance()
+			elif actual_focus_distance == 1:
+				increment_special_item_distance()
+		else:
+			set_new_values_goal_item()
+	else:
+		set_new_values_goal_item()
+	print()
+	print(goal_distance," <-> ",special_item_distance)
+	print()
+	return [goal_distance, special_item_distance]
+
+
+func set_new_values_goal_item() -> void:
 	if get_chance() <= 50:
 		goal_distance = 51
 		special_item_distance = 49
 	else:
 		special_item_distance = 51
 		goal_distance = 49
-	return [goal_distance, special_item_distance]
