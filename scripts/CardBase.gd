@@ -23,8 +23,10 @@ var my_group : String
 
 var initial_position : Vector2
 
-var focused = false # usado pra indicar uma carta
-var clicked = false # usado como um FLAG de clique unico
+var focused := false # usado pra indicar uma carta
+var clicked := false # usado como um FLAG de clique unico
+var moving := false 
+var handling := false
 
 
 # PEGA todas as informações da Carta
@@ -102,17 +104,32 @@ func _unhandled_input(event: InputEvent) -> void:
 					clicked = true
 					z_index = 1
 	if event.is_action_released("click"):
+		if focused:
+			if clicked:
+				print("Clicked...")
+				if card_type == "Weapon":
+					CardManager.card_clicked = self
+			elif not clicked:
+				print("Not Clicked...")
+				if card_type == "Action" and card_description == "Enemy" and CardManager.card_clicked != null:
+					CardManager.card_released = self
+			
+			CardManager.make_interaction()
+		
 		position = initial_position
 		clicked = false
 		focused = false
 		z_index = 0
 	if clicked and event is InputEventMouseMotion:
 		if card_type == "Weapon":
+			moving = true
 #			global_position = get_node("/root/MainCore/Mouse").global_position
 			global_position = get_global_mouse_position()
 		if card_type == "Action" and card_description == "Potion":
+			moving = true
 			global_position = get_global_mouse_position()
 #			print(event)
+		moving = false
 	
 	pass # func _input
 
@@ -272,6 +289,12 @@ func call_anim_out() -> void:
 		$Anim.play("out_2")
 	
 	pass # func call_anim_out
+
+
+func call_anim_hit() -> void:
+	$Anim.play("hit")
+	
+	pass
 
 
 # Altera a possibilidade de poder clicar na carta

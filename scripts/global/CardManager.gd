@@ -32,7 +32,18 @@ var ref_move = {"ref_left_move" : {}, "ref_middle_move" : {}, "ref_right_move" :
 #########################################################################################################
 # Fim do Armazenamento da Referencia
 #########################################################################################################
+#########################################################################################################
+#########################################################################################################
+# Referencia da Interoperabilidade das Cartas ESCOLHIDAS
+#########################################################################################################
 
+var card_clicked : RigidBody2D
+var card_released : RigidBody2D
+
+var interaction : bool = false
+#########################################################################################################
+# Fim da Referencia da Interoperabilidade das Cartas ESCOLHIDAS
+#########################################################################################################
 
 
 
@@ -41,6 +52,28 @@ func _ready() -> void:
 	
 	pass # func _ready
 
+
+# Realiza a INTERAÇÂO / MECANICA entre as Cartas
+func make_interaction():
+	if card_clicked != null and card_released != null:
+		if card_clicked.card_type == "Weapon" and card_released.card_type == "Action" and card_released.card_description == "Enemy":
+			print()
+			print("Ataque: ", card_clicked.card_type, card_clicked.card_name, " -> ", card_released.card_type, card_released.card_name)
+			card_released.call_anim_hit()
+			print()
+			interaction = true
+	if interaction:
+		interaction = false
+		clear_maked()
+	pass # func make_interaction
+
+
+# LIMPA a Interoperabilidade entre as cartas
+func clear_maked():
+	card_clicked = null
+	card_released = null
+	
+	pass # func clear_maked
 
 
 # retorna um VECTOR2 com uma IMAGEM, o TIPO e um NOME para um especifico tipo de Carta
