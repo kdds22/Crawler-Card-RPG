@@ -21,8 +21,16 @@ func _process(delta: float) -> void:
 
 
 func _on_Mouse_body_entered(body: PhysicsBody2D) -> void:
-	print(body.get_info_card())
+	pre_focus = body.get_info_card()
+	print(pre_focus)
 	pass # Replace with function body.
+
+
+func _on_Mouse_body_exited(body: PhysicsBody2D) -> void:
+	pre_focus = {}
+	print(pre_focus)
+	pass # Replace with function body.
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event == InputEventMouseButton and event.is_action_pressed("click"):

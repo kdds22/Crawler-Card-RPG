@@ -43,11 +43,13 @@ func get_chance() -> int:
 	pass # func get_chance
 
 
+# GETa a direção para o Objetivo ou Item Especial
 func get_goal_or_specialItem() -> int:
 	if get_chance() <= 50:
 		actual_focus_distance = 1
 	else: actual_focus_distance = 0
-	return actual_focus_distance
+	
+	return actual_focus_distance # func get_goal_or_specialItem
 
 
 # Retorna a possibilidade de ser um Cenario ou um Item
@@ -63,9 +65,8 @@ func get_local_or_item() -> String:
 func set_actual_local_card(value : Dictionary) -> void:
 	actual_card_local = value
 	print("actual_card_local: ",actual_card_local["Name"], 
-		" ----------- ", actual_card_local["Image"], 
-		" ----------- ", actual_card_local["Index"])
-	
+		" ---->>> ", actual_card_local["Image"], 
+		" ---->>> ", actual_card_local["Index"])
 	pass
 func get_local_card() -> Dictionary:
 	return actual_card_local
@@ -128,6 +129,7 @@ func start_card_distance(new : bool, goal_item : int) -> Array:
 	return [goal_distance, special_item_distance]
 
 
+# SETa novos valores de proximidade (Objetivo-SpecialItem)
 func set_new_values_goal_item() -> void:
 	if get_chance() <= 50:
 		goal_distance = 51
@@ -135,3 +137,5 @@ func set_new_values_goal_item() -> void:
 	else:
 		special_item_distance = 51
 		goal_distance = 49
+	
+	pass # func set_new_values_goal_item

@@ -35,7 +35,8 @@ func start_pre_card_base(pos_table : Position2D):
 
 	card_base.set_card_atributes(card_config)
 	card_base.add_to_group(str(pos_table.get_groups()[0]))
-	card_base.my_index_table = pos_table.get_index()
+#	card_base.my_index_table = pos_table.get_index()
+	card_base.my_info["Index"] = pos_table.get_index()
 
 	$CardsTable.get_child(pos_table.get_index()).add_child(card_base)
 
@@ -56,11 +57,11 @@ func card_clicked(card : RigidBody2D) -> void:
 	pass # func card_clicked
 
 
-# Adiciona uma Carta na Mesa
+# Adiciona uma Carta na Mesa -> LOCAL
 func add_new_card(card : Dictionary, pos_table : Sprite, index : int):
-	call_new_locals()
-	
 	print()
+	
+	call_new_locals()
 	
 	if card["Type"] == "Local":
 		var card_base = pre_card_base.instance()
@@ -70,14 +71,13 @@ func add_new_card(card : Dictionary, pos_table : Sprite, index : int):
 #		pos_table.add_child(card_base)
 		$CardsTable.get_child(index).add_child(card_base)
 	
-		print()
-	
 	pass # func add_new_card
 
 
 # Remove a Carta da Mesa
 func remove_card(card : RigidBody2D) -> void:
-	if card.card_type == "Local":
+#	if card.card_type == "Local":
+	if card.my_info["Type"] == "Local":
 #		card.focused = false
 		card.get_parent().scale = Vector2(1,1)
 		card.get_parent().self_modulate = Color(1,1,1)

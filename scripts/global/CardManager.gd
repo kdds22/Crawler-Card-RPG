@@ -54,11 +54,13 @@ func _ready() -> void:
 
 
 # Realiza a INTERAÇÂO / MECANICA entre as Cartas
-func make_interaction():
+func make_interaction() -> void:
 	if card_clicked != null and card_released != null:
-		if card_clicked.card_type == "Weapon" and card_released.card_type == "Action" and card_released.card_description == "Enemy":
+#		if card_clicked.card_type == "Weapon" and card_released.card_type == "Action" and card_released.card_description == "Enemy":
+		if card_clicked.my_info["Type"] == "Weapon" and card_released.my_info["Type"] == "Action" and card_released.my_info["Description"] == "Enemy":
 			print()
-			print("Ataque: ", card_clicked.card_type, card_clicked.card_name, " -> ", card_released.card_type, card_released.card_name)
+#			print("Ataque: ", card_clicked.card_type, card_clicked.card_name, " -> ", card_released.card_type, card_released.card_name)
+			print("Ataque: ", card_clicked.my_info["Type"], card_clicked.my_info["Name"], " -> ", card_released.my_info["Type"], card_released.my_info["Name"])
 			card_released.call_anim_hit()
 			print()
 			interaction = true
@@ -69,7 +71,7 @@ func make_interaction():
 
 
 # LIMPA a Interoperabilidade entre as cartas
-func clear_maked():
+func clear_maked() -> void:
 	card_clicked = null
 	card_released = null
 	
