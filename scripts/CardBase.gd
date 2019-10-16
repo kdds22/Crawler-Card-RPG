@@ -46,7 +46,6 @@ func clean_info_card() -> void:
 # Função pra Executar qualquer ação de "entrada" sobre a carta
 # Normalmente ações com o Mouse
 func _unhandled_input(event: InputEvent) -> void:
-	
 	if focused and event is InputEventMouseButton:
 		
 		
@@ -57,8 +56,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				clicked = true
 				z_index = 1
 				print("is_pressed_Not_clicked...")
-				if my_info["Type"] == "Local":
-						get_node(main_core_path).card_clicked(self) # MainCore.gd
+				if my_info["Type"] == "Local" and input_pickable == true:
+					print("picable:-: ",input_pickable)
+					get_node(main_core_path).card_clicked(self) # MainCore.gd
 			
 			
 			print(my_info["Type"])
@@ -124,7 +124,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
-	pickable(false)
+	print(input_pickable)
 	$Sprite/TextureProgressGoal.value = my_info["Distance_Goal"]
 	$Sprite/TextureProgressItem.value = my_info["Distance_Special_Item"]
 	if my_info["Type"] == "Local":
