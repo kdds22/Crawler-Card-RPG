@@ -64,10 +64,6 @@ func get_local_or_item() -> String:
 # SETa-GETa qual é a Carta de Movimentação Atual
 func set_actual_local_card(value : Dictionary) -> void:
 	actual_card_local = value
-	print("actual_card_local: ",actual_card_local["Name"], 
-		" ---->>> ", actual_card_local["Image"], 
-		" ---->>> ", actual_card_local["Index"])
-	pass
 func get_local_card() -> Dictionary:
 	return actual_card_local
 	# func set_actual_local_card
@@ -123,10 +119,8 @@ func start_card_distance(new : bool, goal_item : int) -> Array:
 			set_new_values_goal_item()
 	else:
 		set_new_values_goal_item()
-	print()
-	print(goal_distance," <-> ",special_item_distance)
-	print()
-	return [goal_distance, special_item_distance]
+		
+	return [goal_distance, special_item_distance] # func start_card_distance
 
 
 # SETa novos valores de proximidade (Objetivo-SpecialItem)

@@ -256,10 +256,6 @@ func random_player(index : int, group : String, change : bool) -> Dictionary:
 func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 #func random_local(index : int, group : String, change : bool) -> Dictionary:
 	
-	print()
-	print("Antes de continuar o Random_Local: Goal -> ",CoreSystemManager.goal_distance,", SpecialItem -> ",CoreSystemManager.special_item_distance)
-	print()
-	
 	var type := "Local"
 	var name : String
 	var image : String
@@ -269,9 +265,7 @@ func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 	var distance_special_item : int = CoreSystemManager.special_item_distance
 	
 	if info["Index"] == index:
-		print()
-		print("Focado ", info["Index"])
-		print()
+		
 		if info["Distance_Goal"] > info["Distance_Special_Item"]:
 			CoreSystemManager.increment_quest_distance()
 			CoreSystemManager.actual_focus_distance = 0
@@ -282,20 +276,18 @@ func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 		distance_goal = CoreSystemManager.goal_distance
 		distance_special_item = CoreSystemManager.special_item_distance
 	else:
-		print()
-		print("Não Focado: ", info["Index"])
-		print()
+		
 		var goal_item
 		if info["Distance_Goal"] > info["Distance_Special_Item"]:
 			goal_item = 0
 		else:
 			goal_item = 1
+		
+		# definindo a distancia do CoreLoop
 		var distance = CoreSystemManager.start_card_distance(true, goal_item)
 		distance_goal = distance[0]
 		distance_special_item = distance[1]
-	print()
-	print("Index: ",info["Index"], " - ",distance_goal, ", ", distance_special_item)
-	print()
+	
 	if change:
 		local_chance = CoreSystemManager.get_chance()
 		if local_chance < 50:
@@ -312,15 +304,11 @@ func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 	
 	var local = return_card_info(type, name, image, info["Group"], 0, "", false, Color(.05,.05,1.5,1), info["Index"], distance_goal, distance_special_item)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
-	print()
-	print("random local -> ", info)
-	print()
+	
 	match info["Group"]:
 		"rightMove" : ref_move["ref_right_move"] = local
 		"leftMove" : ref_move["ref_left_move"] = local
 		"middleMove" : ref_move["ref_middle_move"] = local
-	
-	print()
 	
 	return local
 	# func random_local
@@ -337,27 +325,20 @@ func local_card_clicked(value : Dictionary, pos_table : Sprite, index : int) -> 
 		return_local = {}
 		
 		var pre_local_change = CoreSystemManager.get_local_change()
-		print("Pre_local_change >>>>> ",pre_local_change)
 		if pre_local_change:
-#		if CoreSystemManager.set_actual_local_card(value):
 			var local_or_item = CoreSystemManager.get_local_or_item()
 			
 			if local_or_item == "Local":
-#				return_local = random_local(ref_move[i]["Index"], ref_move[i]["Group"], true)
 				return_local = random_local(ref_move[i], true, index)
 			elif local_or_item == "Item": # chamar um ITEM ao inves de um LOCAL (futuramente)
-#				return_local = random_local(ref_move[i]["Index"], ref_move[i]["Group"], true)
 				return_local = random_local(ref_move[i], true, index)
 		
 		else:
 			value = ref_move[i]
-#			return_local  = value
 			return_local = random_local(ref_move[i], false, index)
-#			return_local = random_local(ref_move[i]["Index"], ref_move[i]["Group"], false)
 		
 		return_array_local.append(return_local)
-	
-	print("----------------------------------------- tamanho do array_card: ", len(return_array_local))
+		
 	return return_array_local # func local_card_clicked
 
 
