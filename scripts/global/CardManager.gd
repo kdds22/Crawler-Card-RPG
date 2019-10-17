@@ -64,9 +64,14 @@ func make_interaction() -> void:
 			card_released.call_anim_hit()
 			print()
 			interaction = true
+		clear_maked()
 	if interaction:
 		interaction = false
 		clear_maked()
+	print()
+	print("Maked Interaction -> ",card_clicked, card_released)
+	print()
+#	clear_maked()
 	pass # func make_interaction
 
 

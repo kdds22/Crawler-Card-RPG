@@ -20,6 +20,10 @@ var clicked := false # usado como um FLAG de clique unico
 var moving := false 
 var handling := false
 
+var interactin_flag_clicked : bool = false
+var interactin_flag_n_clicked : bool = false
+
+
 
 # PEGA todas as informações da Carta
 # Retorna um dicionario de atributos
@@ -52,27 +56,39 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_pressed("click"):
 			if clicked:
 				print("is_pressed_clicked...")
+				CardManager.clear_maked()
 			else:
 				clicked = true
 				z_index = 1
 				print("is_pressed_Not_clicked...")
 				if my_info["Type"] == "Local" and input_pickable == true:
-					print("picable:-: ",input_pickable)
 					get_node(main_core_path).card_clicked(self) # MainCore.gd
-			
 			
 			print(my_info["Type"])
 		
 		if event.is_action_released("click"):
 			if clicked:
+				print("is_released_clicked... escolhi a carta: ", my_info["Name"])
+				print()
 				clicked = false
 				z_index = 0
 				position = initial_position
-				print("is_released_clicked... escolhi a carta: ", my_info["Name"])
-			else:
+				CardManager.card_clicked = self
+				interactin_flag_clicked = true
+			elif not clicked:
 				print("is_released_Not_clicked... e vai interagir com: ", my_info["Name"])
+				z_index = 0
+				position = initial_position
+				CardManager.card_released = self
+				interactin_flag_n_clicked = true
 			
-#			print(my_info["Name"])
+			
+		if interactin_flag_clicked:
+			CardManager.make_interaction()
+		else:
+			CardManager.clear_maked()
+			interactin_flag_clicked = false
+			interactin_flag_n_clicked = false
 		
 		pass
 	
@@ -124,7 +140,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
-	print(input_pickable)
 	$Sprite/TextureProgressGoal.value = my_info["Distance_Goal"]
 	$Sprite/TextureProgressItem.value = my_info["Distance_Special_Item"]
 	if my_info["Type"] == "Local":
