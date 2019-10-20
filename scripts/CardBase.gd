@@ -7,6 +7,8 @@ extends RigidBody2D
 
 var my_info : Dictionary = {}
 
+var card_info_interacting : RigidBody2D
+
 # =====================================================
 # Fim da Propriedade das Cartas
 # =====================================================
@@ -50,89 +52,37 @@ func clean_info_card() -> void:
 # Função pra Executar qualquer ação de "entrada" sobre a carta
 # Normalmente ações com o Mouse
 func _unhandled_input(event: InputEvent) -> void:
-	if focused and event is InputEventMouseButton:
+	
+	if focused:
 		if event.is_action_pressed("click"):
-			if clicked:
-				print("is_pressed_clicked...")
-#				CardManager.clear_maked()
-			else:
-				clicked = true
-#				z_index = 1
-				$Sprite.z_index = 1
-				print("is_pressed_Not_clicked...")
-				if my_info["Type"] == "Local" and input_pickable == true:
-					get_node(main_core_path).card_clicked(self) # MainCore.gd
-			
-			print(my_info["Type"])
-		
+			clicked = true
+			print("\nclicked: ",my_info["Name"]," - ", clicked)
+			$Sprite.z_index = 1
 		if event.is_action_released("click"):
 			if clicked:
-				print("is_released_clicked... escolhi a carta: ", my_info["Name"])
-				print()
+				print(my_info["Name"], " - Soltei - ", clicked)
 				clicked = false
-#				z_index = 0
 				$Sprite.z_index = 0
+				print("\nunclicked: ",my_info["Name"]," - ", clicked)
 				position = initial_position
-#				CardManager.card_clicked = self
-#				interactin_flag_clicked = true
-			elif not clicked:
-				print("is_released_Not_clicked... e vai interagir com: ", my_info["Name"])
-#				z_index = 0
-				$Sprite.z_index = 0
-				position = initial_position
-#				CardManager.card_released = self
-#				interactin_flag_n_clicked = true
-			
-			
-		if interactin_flag_clicked:
-			CardManager.make_interaction()
-		else:
-			CardManager.clear_maked()
-			interactin_flag_clicked = false
-			interactin_flag_n_clicked = false
-		
-		pass
-	
-	
-	
-	"""
-	if event is InputEventMouseButton:
-		if event.is_action_pressed("click"):
-			if focused:
-				if not clicked:
-					if my_info["Type"] == "Action":
-						print("Carta de AÇÃO -> ",my_info["Name"])
-						if my_info["Description"] == "Potion":
-							clicked = true
-							z_index = 1
-					if my_info["Type"] == "Weapon":
-						clicked = true
-						z_index = 1
-		if event.is_action_released("click"):
-			if focused:
-				if clicked:
-					print("Clicked...")
-					if my_info["Type"] == "Weapon":
-						CardManager.card_clicked = self
-				elif not clicked:
-					print("Not Clicked...")
-					if my_info["Type"] == "Action" and my_info["Description"] == "Enemy" and CardManager.card_clicked != null:
-						CardManager.card_released = self
 				
-				CardManager.make_interaction()
-			
-			position = initial_position
-			clicked = false
-			focused = false
-			z_index = 0
-			"""
+				if CardManager._on_card_interacting != null:
+					print("\nInteração com: ",CardManager._on_card_interacting.my_info["Name"])
+					_on_interacting_card()
+				else:
+					print("\n\nvaziooooo.... nenhuma interação\n\n")
+				
+			else:
+				print(my_info["Name"], ", interação - ", clicked)
+	
+	
 	if clicked and event is InputEventMouseMotion:
-		if my_info["Type"] == "Weapon":
+		if my_info["Type"] == "Weapon" or (my_info["Type"] == "Action" and my_info["Description"] == "Potion"):
 			moving = true
 			global_position = get_global_mouse_position()
-		if my_info["Type"] == "Action" and my_info["Description"] == "Potion":
-			moving = true
-			global_position = get_global_mouse_position()
+#		if my_info["Type"] == "Action" and my_info["Description"] == "Potion":
+#			moving = true
+#			global_position = get_global_mouse_position()
 		moving = false
 	
 	pass # func _input
@@ -151,6 +101,17 @@ func _ready() -> void:
 			$Sprite/TextureProgressGoal/Anim.play("signal")
 			$Sprite/TextureProgressItem/Anim.play("signal")
 	pass # func _ready
+
+
+func _process(delta: float) -> void:
+	if clicked and focused:
+		global_position = get_global_mouse_position()
+	if clicked and not focused:
+		clicked = false
+		position = initial_position
+		
+	pass
+
 
 
 # SETa TODAS as informações/atributos da Carta
@@ -263,7 +224,7 @@ func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 # Referencia a Carta que esta sendo FOCADA
 func _on_CardBase_mouse_entered() -> void:
 	focused = true
-	print(my_info, "Focado: ", focused)
+	print(my_info["Name"], "\nFocado: ", focused)
 	get_parent().scale = Vector2(1.2,1.2)
 	get_parent().self_modulate = my_info["Moldure_Color"]
 	
@@ -273,7 +234,7 @@ func _on_CardBase_mouse_entered() -> void:
 # Referencia a Carta que esta sendo "DES"FOCADA
 func _on_CardBase_mouse_exited() -> void:
 	focused = false
-	print(my_info["Name"], "Focado: ", focused)
+	print(my_info["Name"], "\nFocado: ", focused)
 	clicked = false
 	get_parent().scale = Vector2(1.1,1.1)
 	get_parent().self_modulate = Color(1,1,1)
@@ -305,17 +266,26 @@ func pickable(value : bool) -> void:
 	pass # func pickable
 
 
-
-
-
-
+func _on_interacting_card() -> void:
+	var _on_card = CardManager._on_card_interacting
+	print("_on_interacting_card - my_info: ",my_info)
+	if my_info["Type"] == "Weapon" and _on_card.my_info["Type"] == "Action" and _on_card.my_info["Name"] == "Ogre":
+		_on_card.call_anim_hit()
+		pass
+	
+	pass
 
 
 func _on_Detect_body_entered(body: PhysicsBody2D) -> void:
-	if body.focused:
-		print("Corpo Focado")
-		print(body.name)
-	if not body.focused:
-		print("Corpo Não Focado")
-		print(body.name)
-		
+	if body != self and clicked: # and body.focused:
+		print("\n",body.focused,"\n")
+		print("Entrou em: ",body.my_info["Name"], " -> ",self.my_info["Name"], ", Modo: ",body.mode)
+#		card_info_interacting = body
+	pass
+
+func _on_Detect_body_exited(body: PhysicsBody2D) -> void:
+	if body != self and body.focused: # and body.focused:
+		print("\n",body.focused,"\n")
+		print("Saiu de: ",body.my_info["Name"], " -> ",self.my_info["Name"])
+		card_info_interacting = null
+	pass # Replace with function body.

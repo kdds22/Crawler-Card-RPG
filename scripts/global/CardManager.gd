@@ -40,6 +40,8 @@ var ref_move = {"ref_left_move" : {}, "ref_middle_move" : {}, "ref_right_move" :
 var card_clicked : RigidBody2D
 var card_released : RigidBody2D
 
+var _on_card_interacting : RigidBody2D
+
 var interaction : bool = false
 #########################################################################################################
 # Fim da Referencia da Interoperabilidade das Cartas ESCOLHIDAS
