@@ -51,15 +51,14 @@ func clean_info_card() -> void:
 # Normalmente ações com o Mouse
 func _unhandled_input(event: InputEvent) -> void:
 	if focused and event is InputEventMouseButton:
-		
-		
 		if event.is_action_pressed("click"):
 			if clicked:
 				print("is_pressed_clicked...")
-				CardManager.clear_maked()
+#				CardManager.clear_maked()
 			else:
 				clicked = true
-				z_index = 1
+#				z_index = 1
+				$Sprite.z_index = 1
 				print("is_pressed_Not_clicked...")
 				if my_info["Type"] == "Local" and input_pickable == true:
 					get_node(main_core_path).card_clicked(self) # MainCore.gd
@@ -71,16 +70,18 @@ func _unhandled_input(event: InputEvent) -> void:
 				print("is_released_clicked... escolhi a carta: ", my_info["Name"])
 				print()
 				clicked = false
-				z_index = 0
+#				z_index = 0
+				$Sprite.z_index = 0
 				position = initial_position
-				CardManager.card_clicked = self
-				interactin_flag_clicked = true
+#				CardManager.card_clicked = self
+#				interactin_flag_clicked = true
 			elif not clicked:
 				print("is_released_Not_clicked... e vai interagir com: ", my_info["Name"])
-				z_index = 0
+#				z_index = 0
+				$Sprite.z_index = 0
 				position = initial_position
-				CardManager.card_released = self
-				interactin_flag_n_clicked = true
+#				CardManager.card_released = self
+#				interactin_flag_n_clicked = true
 			
 			
 		if interactin_flag_clicked:
@@ -91,7 +92,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			interactin_flag_n_clicked = false
 		
 		pass
-	
 	
 	
 	
@@ -156,7 +156,7 @@ func _ready() -> void:
 # SETa TODAS as informações/atributos da Carta
 # Chamando todas as funções individuais pra cada atributo
 func set_card_atributes(value : Dictionary) -> void:
-	clean_info_card()
+#	clean_info_card()
 	set_name_type(value["Type"])
 	set_image_type(value["Image"])
 	set_name_desc(value["Name"])
@@ -262,6 +262,8 @@ func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 
 # Referencia a Carta que esta sendo FOCADA
 func _on_CardBase_mouse_entered() -> void:
+	focused = true
+	print(my_info, "Focado: ", focused)
 	get_parent().scale = Vector2(1.2,1.2)
 	get_parent().self_modulate = my_info["Moldure_Color"]
 	
@@ -270,6 +272,8 @@ func _on_CardBase_mouse_entered() -> void:
 
 # Referencia a Carta que esta sendo "DES"FOCADA
 func _on_CardBase_mouse_exited() -> void:
+	focused = false
+	print(my_info["Name"], "Focado: ", focused)
 	clicked = false
 	get_parent().scale = Vector2(1.1,1.1)
 	get_parent().self_modulate = Color(1,1,1)
@@ -299,3 +303,19 @@ func pickable(value : bool) -> void:
 	input_pickable = value
 	
 	pass # func pickable
+
+
+
+
+
+
+
+
+func _on_Detect_body_entered(body: PhysicsBody2D) -> void:
+	if body.focused:
+		print("Corpo Focado")
+		print(body.name)
+	if not body.focused:
+		print("Corpo Não Focado")
+		print(body.name)
+		

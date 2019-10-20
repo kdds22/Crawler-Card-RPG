@@ -21,15 +21,36 @@ func _process(delta: float) -> void:
 
 
 func _on_Mouse_body_entered(body: PhysicsBody2D) -> void:
-	pre_focus = body.get_info_card()
-	body.focused = true
+#	body.focused = true
+	if body.has_method("get_info_card"):
+		pre_focus = body.get_info_card()
+	print()
+	print("==========================================")
+	print("----- Mouse Entrada -----")
+	print(pre_focus, "Focado")
+	print("----- Mouse Entrada -----")
+	print("==========================================")
+	print()
 #	print(pre_focus) # Imprimir os atributos da carta
 	pass # Replace with function body.
 
 
 func _on_Mouse_body_exited(body: PhysicsBody2D) -> void:
-	pre_focus = {}
-	body.focused = false
+#	body.focused = false
+	print(pre_focus)
+	pre_focus.clear()
+	print(pre_focus)
+	"""
+	if pre_focus != {}:
+		print()
+		print("==========================================")
+		print("----- Mouse Saida -----")
+		print(pre_focus["Name"], "DesFocado")
+		print("----- Mouse Saida -----")
+		print("==========================================")
+		print()
+	"""
+#	pre_focus = {}
 #	print(pre_focus) # imprimir os atributos da carta, resultado = null / {}
 	pass # Replace with function body.
 
