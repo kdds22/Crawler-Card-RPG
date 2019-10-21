@@ -59,6 +59,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			print("\nclicked: ",my_info["Name"]," - ", clicked)
 			$Sprite.z_index = 1
 		if event.is_action_released("click"):
+			moving = false
+			position = initial_position
+			$Sprite.z_index = 0
 			if clicked:
 				print(my_info["Name"], " - Soltei - ", clicked)
 				clicked = false
@@ -77,13 +80,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 	
 	if clicked and event is InputEventMouseMotion:
-		if my_info["Type"] == "Weapon" or (my_info["Type"] == "Action" and my_info["Description"] == "Potion"):
+		if my_info["Type"] == "Weapon":
 			moving = true
-			global_position = get_global_mouse_position()
-#		if my_info["Type"] == "Action" and my_info["Description"] == "Potion":
-#			moving = true
-#			global_position = get_global_mouse_position()
-		moving = false
+		if my_info["Type"] == "Action" and my_info["Description"] == "Potion":
+			moving = true
 	
 	pass # func _input
 
@@ -104,12 +104,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if clicked and focused:
+	if moving:
 		global_position = get_global_mouse_position()
-	if clicked and not focused:
-		clicked = false
-		position = initial_position
-		
+		clicked = true # sem isso a carta não realiza a interação, por causa da condição -> if clicked and not focused:
 	pass
 
 
@@ -233,11 +230,12 @@ func _on_CardBase_mouse_entered() -> void:
 
 # Referencia a Carta que esta sendo "DES"FOCADA
 func _on_CardBase_mouse_exited() -> void:
-	focused = false
-	print(my_info["Name"], "\nFocado: ", focused)
-	clicked = false
-	get_parent().scale = Vector2(1.1,1.1)
-	get_parent().self_modulate = Color(1,1,1)
+	if not moving:
+		focused = false
+		print(my_info["Name"], "\nFocado: ", focused)
+		clicked = false
+		get_parent().scale = Vector2(1.1,1.1)
+		get_parent().self_modulate = Color(1,1,1)
 	
 	pass # func _on_CardBase_mouse_exited
 
