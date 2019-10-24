@@ -16,6 +16,7 @@ var card_info_interacting : RigidBody2D
 var main_core_path = "../../.."
 
 var initial_position : Vector2
+var global_initial_position : Vector2
 
 var focused := false # usado pra indicar uma carta
 var clicked := false # usado como um FLAG de clique unico
@@ -53,11 +54,16 @@ func clean_info_card() -> void:
 # Normalmente ações com o Mouse
 func _unhandled_input(event: InputEvent) -> void:
 	
+	if event.is_action_pressed("atk_enemy") and my_info["Type"] == "Action" and my_info["Description"] == "Enemy":
+		atk_player()
 	if focused:
 		if event.is_action_pressed("click"):
 			clicked = true
 			print("\nclicked: ",my_info["Name"]," - ", clicked)
 			$Sprite.z_index = 1
+			
+			## Mudar no Mapa
+			
 		if event.is_action_released("click"):
 			moving = false
 			position = initial_position
@@ -90,9 +96,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
-	$Sprite/TextureProgressGoal.value = my_info["Distance_Goal"]
-	$Sprite/TextureProgressItem.value = my_info["Distance_Special_Item"]
+	global_initial_position = global_position
+	initial_position = position
+	
 	if my_info["Type"] == "Local":
+		$Sprite/TextureProgressGoal.value = my_info["Distance_Goal"]
+		$Sprite/TextureProgressItem.value = my_info["Distance_Special_Item"]
+		
 		if my_info["Distance_Goal"] > my_info["Distance_Special_Item"]:
 			$Sprite/TextureProgressGoal/Anim.play("signal")
 		elif my_info["Distance_Goal"] < my_info["Distance_Special_Item"]:
@@ -266,7 +276,7 @@ func pickable(value : bool) -> void:
 
 func _on_interacting_card() -> void:
 	var _on_card = CardManager._on_card_interacting
-	print("_on_interacting_card - my_info: ",my_info)
+	print("\n_on_interacting_card - my_info: \n",my_info)
 	if my_info["Type"] == "Weapon" and _on_card.my_info["Type"] == "Action" and _on_card.my_info["Name"] == "Ogre":
 		_on_card.call_anim_hit()
 		pass
@@ -286,4 +296,23 @@ func _on_Detect_body_exited(body: PhysicsBody2D) -> void:
 		print("\n",body.focused,"\n")
 		print("Saiu de: ",body.my_info["Name"], " -> ",self.my_info["Name"])
 		card_info_interacting = null
+	pass # Replace with function body.
+
+
+
+func atk_player():
+	$Tween.interpolate_property(self, "global_position", global_position, get_node("/root/MainCore").ref_player.global_position, .5, Tween.TRANS_EXPO, Tween.EASE_IN)
+	$Tween.start()
+	print("start tween")
+	yield($Tween,"tween_completed")
+	get_node("/root/MainCore").ref_player.call_anim_hit()
+	$Tween.interpolate_property(self, "position", position, initial_position, .5, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	$Tween.start()
+	print("start tween 2")
+	pass
+
+
+
+func _on_Tween_tween_all_completed() -> void:
+	$Tween.stop_all()
 	pass # Replace with function body.

@@ -348,7 +348,10 @@ anims/start = SubResource( 9 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Detect"]
 shape = SubResource( 5 )
+
+[node name="Tween" type="Tween" parent="."]
 [connection signal="mouse_entered" from="." to="." method="_on_CardBase_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_CardBase_mouse_exited"]
 [connection signal="body_entered" from="Detect" to="." method="_on_Detect_body_entered"]
 [connection signal="body_exited" from="Detect" to="." method="_on_Detect_body_exited"]
+[connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]

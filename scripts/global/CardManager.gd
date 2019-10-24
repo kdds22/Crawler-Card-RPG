@@ -55,28 +55,6 @@ func _ready() -> void:
 	pass # func _ready
 
 
-# Realiza a INTERAÇÂO / MECANICA entre as Cartas
-func make_interaction() -> void:
-	if card_clicked != null and card_released != null:
-#		if card_clicked.card_type == "Weapon" and card_released.card_type == "Action" and card_released.card_description == "Enemy":
-		if card_clicked.my_info["Type"] == "Weapon" and card_released.my_info["Type"] == "Action" and card_released.my_info["Description"] == "Enemy":
-			print()
-#			print("Ataque: ", card_clicked.card_type, card_clicked.card_name, " -> ", card_released.card_type, card_released.card_name)
-			print("Ataque: ", card_clicked.my_info["Type"], card_clicked.my_info["Name"], " -> ", card_released.my_info["Type"], card_released.my_info["Name"])
-			card_released.call_anim_hit()
-			print()
-			interaction = true
-		clear_maked()
-	if interaction:
-		interaction = false
-		clear_maked()
-	print()
-	print("Maked Interaction -> ",card_clicked, card_released)
-	print()
-#	clear_maked()
-	pass # func make_interaction
-
-
 # LIMPA a Interoperabilidade entre as cartas
 func clear_maked() -> void:
 	card_clicked = null

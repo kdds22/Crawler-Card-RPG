@@ -5,6 +5,8 @@ onready var pre_card_base = preload("res://scenes/CardBase.tscn")
 onready var all_pos = $Cards.get_children()
 
 
+var ref_player : Object
+
 #### Index das Local_Cards
 onready var all_local_index = [5,6,7]
 
@@ -36,6 +38,9 @@ func start_pre_card_base(pos_table : Position2D):
 	card_base.my_info["Index"] = pos_table.get_index()
 
 	$CardsTable.get_child(pos_table.get_index()).add_child(card_base)
+	
+	if card_base.my_info["Type"] == "Player":
+		ref_player = card_base # seta a referencia do Objeto-Player... mantendo todos os atributos pra facilitar conexões
 
 	pass # func start_pre_card_base
 
