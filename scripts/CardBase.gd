@@ -58,9 +58,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		atk_player()
 	if focused:
 		if event.is_action_pressed("click"):
-			clicked = true
-			print("\nclicked: ",my_info["Name"]," - ", clicked)
-			$Sprite.z_index = 1
+			match my_info["Type"]: # Verificação dos Tipos de carta... like StateMachine
+				"Local":
+					print("\nOps, clicou num:, "+my_info["Type"])
+					get_node(main_core_path).card_clicked(self)
+				_:
+					print("\nOps, clicou num:, "+my_info["Type"])
+					clicked = true
+					$Sprite.z_index = 1
 			
 			## Mudar no Mapa
 			

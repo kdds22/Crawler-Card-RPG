@@ -7,10 +7,6 @@ onready var all_pos = $Cards.get_children()
 
 var ref_player : Object
 
-#### Index das Local_Cards
-onready var all_local_index = [5,6,7]
-
-
 
 
 # Para cada Position2D dentro de $Cards,
@@ -46,6 +42,7 @@ func start_pre_card_base(pos_table : Position2D):
 
 
 # Chama o Gerenciador de Cartas para a proxima ação
+# Põe na Tela as proximas 3 Cartas-Locais
 func card_clicked(card : RigidBody2D) -> void:
 	var info = card.get_info_card() # printa a INFO da Carta
 	var new_card : Array
