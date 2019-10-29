@@ -32,6 +32,8 @@ var actual_card_local : Dictionary
 
 ##### Actual Cards #####
 
+var turn : bool = false # Flag do turno Player-Sistema
+var process : bool = true # Flag de ação do Player
 
 
 

@@ -51,6 +51,7 @@ var interaction : bool = false
 
 func _ready() -> void:
 	randomize()
+	CoreSystemManager.turn = true
 	
 	pass # func _ready
 

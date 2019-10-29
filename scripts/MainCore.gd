@@ -7,6 +7,9 @@ onready var all_pos = $Cards.get_children()
 
 var ref_player : Object
 
+var enemy : bool = false # flag de já foi instanciado um Inimigo
+var potion : bool = false # flag de já foi instanciado uma Poção
+
 
 
 # Para cada Position2D dentro de $Cards,
@@ -25,19 +28,30 @@ func _ready() -> void:
 # Inicializa as cartas nas posições pre-definidas em $Cards
 # Inicializa já com atributos
 func start_pre_card_base(pos_table : Position2D):
+	
 	var pos_group = str(pos_table.get_groups()[0])
 	var card_base = pre_card_base.instance()
+	
 	var card_config = CardManager.get_card_type_start(pos_group, pos_table.get_index(), false)
-
 	card_base.set_card_atributes(card_config)
 	card_base.add_to_group(str(pos_table.get_groups()[0]))
 	card_base.my_info["Index"] = pos_table.get_index()
+	# não pode vir 2 cartas do mesmo Action_Type (ex.: 2 ogros, ou 2 poções)
+	while (card_config["Description"] == "Enemy" and enemy == true) or (card_config["Description"] == "Potion" and potion == true):
+		card_config = CardManager.get_card_type_start(pos_group, pos_table.get_index(), false)
+		card_base.set_card_atributes(card_config)
+		card_base.add_to_group(str(pos_table.get_groups()[0]))
+		card_base.my_info["Index"] = pos_table.get_index()
 
 	$CardsTable.get_child(pos_table.get_index()).add_child(card_base)
 	
 	if card_base.my_info["Type"] == "Player":
 		ref_player = card_base # seta a referencia do Objeto-Player... mantendo todos os atributos pra facilitar conexões
-
+	if card_base.my_info["Description"] == "Enemy":
+		enemy = true
+	if card_base.my_info["Description"] == "Potion":
+		potion = true
+		
 	pass # func start_pre_card_base
 
 

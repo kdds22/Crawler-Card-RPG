@@ -53,48 +53,53 @@ func clean_info_card() -> void:
 # Função pra Executar qualquer ação de "entrada" sobre a carta
 # Normalmente ações com o Mouse
 func _unhandled_input(event: InputEvent) -> void:
-	
-	if event.is_action_pressed("atk_enemy") and my_info["Type"] == "Action" and my_info["Description"] == "Enemy":
-		atk_player()
-	if focused:
-		if event.is_action_pressed("click"):
-			match my_info["Type"]: # Verificação dos Tipos de carta... like StateMachine
-				"Local":
-					print("\nOps, clicou num:, "+my_info["Type"])
-					get_node(main_core_path).card_clicked(self)
-				_:
-					print("\nOps, clicou num:, "+my_info["Type"])
-					clicked = true
-					$Sprite.z_index = 1
-			
-			## Mudar no Mapa
-			
-		if event.is_action_released("click"):
-			moving = false
-			position = initial_position
-			$Sprite.z_index = 0
-			if clicked:
-				print(my_info["Name"], " - Soltei - ", clicked)
-				clicked = false
-				$Sprite.z_index = 0
-				print("\nunclicked: ",my_info["Name"]," - ", clicked)
+	if CoreSystemManager.turn: # verifica se está no turno do Jogador
+		if focused:
+			if event.is_action_pressed("click"):
+				match my_info["Type"]: # Verificação dos Tipos de carta... like StateMachine
+					"Local":
+						print("\nOps, clicou num:, "+my_info["Type"])
+						get_node(main_core_path).card_clicked(self)
+					_:
+						print("\nOps, clicou num:, "+my_info["Type"])
+						clicked = true
+						$Sprite.z_index = 1
+				
+				## Mudar no Mapa
+				
+			if event.is_action_released("click"):
+				moving = false
 				position = initial_position
-				
-				if CardManager._on_card_interacting != null:
-					print("\nInteração com: ",CardManager._on_card_interacting.my_info["Name"])
-					_on_interacting_card()
+				$Sprite.z_index = 0
+				if clicked:
+					print(my_info["Name"], " - Soltei - ", clicked)
+					clicked = false
+					$Sprite.z_index = 0
+					print("\nunclicked: ",my_info["Name"]," - ", clicked)
+					position = initial_position
+					
+					if CardManager._on_card_interacting != null:
+						print("\nInteração com: ",CardManager._on_card_interacting.my_info["Name"])
+						_on_interacting_card()
+					else:
+						print("\n\nvaziooooo.... nenhuma interação\n\n")
+					
 				else:
-					print("\n\nvaziooooo.... nenhuma interação\n\n")
-				
-			else:
-				print(my_info["Name"], ", interação - ", clicked)
+					print(my_info["Name"], ", interação - ", clicked)
 	
 	
-	if clicked and event is InputEventMouseMotion:
-		if my_info["Type"] == "Weapon":
-			moving = true
-		if my_info["Type"] == "Action" and my_info["Description"] == "Potion":
-			moving = true
+		if clicked and event is InputEventMouseMotion:
+			if my_info["Type"] == "Weapon":
+				moving = true
+			if my_info["Type"] == "Action" and my_info["Description"] == "Potion":
+				moving = true
+	else: # verifica se esta no turno do sistema / inimigos / npc
+		if event.is_action_pressed("atk_enemy") or (my_info["Type"] == "Action" and my_info["Description"] == "Enemy"):
+			set_process_unhandled_input(false)
+			CoreSystemManager.process = false
+			yield(get_tree().create_timer(1, false),"timeout")
+			atk_player()
+		
 	
 	pass # func _input
 
@@ -235,22 +240,24 @@ func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 
 # Referencia a Carta que esta sendo FOCADA
 func _on_CardBase_mouse_entered() -> void:
-	focused = true
-	print(my_info["Name"], "\nFocado: ", focused)
-	get_parent().scale = Vector2(1.2,1.2)
-	get_parent().self_modulate = my_info["Moldure_Color"]
+	if CoreSystemManager.process:
+		focused = true
+		print(my_info["Name"], "\nFocado: ", focused)
+		get_parent().scale = Vector2(1.2,1.2)
+		get_parent().self_modulate = my_info["Moldure_Color"]
 	
 	pass # func _on_CardBase_mouse_entered
 
 
 # Referencia a Carta que esta sendo "DES"FOCADA
 func _on_CardBase_mouse_exited() -> void:
-	if not moving:
-		focused = false
-		print(my_info["Name"], "\nFocado: ", focused)
-		clicked = false
-		get_parent().scale = Vector2(1.1,1.1)
-		get_parent().self_modulate = Color(1,1,1)
+	if CoreSystemManager.process:
+		if not moving:
+			focused = false
+			print(my_info["Name"], "\nFocado: ", focused)
+			clicked = false
+			get_parent().scale = Vector2(1.1,1.1)
+			get_parent().self_modulate = Color(1,1,1)
 	
 	pass # func _on_CardBase_mouse_exited
 
@@ -283,6 +290,7 @@ func _on_interacting_card() -> void:
 	var _on_card = CardManager._on_card_interacting
 	print("\n_on_interacting_card - my_info: \n",my_info)
 	if my_info["Type"] == "Weapon" and _on_card.my_info["Type"] == "Action" and _on_card.my_info["Name"] == "Ogre":
+		CoreSystemManager.turn = false
 		_on_card.call_anim_hit()
 		pass
 	
@@ -308,16 +316,21 @@ func _on_Detect_body_exited(body: PhysicsBody2D) -> void:
 func atk_player():
 	$Tween.interpolate_property(self, "global_position", global_position, get_node("/root/MainCore").ref_player.global_position, .5, Tween.TRANS_EXPO, Tween.EASE_IN)
 	$Tween.start()
-	print("start tween")
 	yield($Tween,"tween_completed")
 	get_node("/root/MainCore").ref_player.call_anim_hit()
 	$Tween.interpolate_property(self, "position", position, initial_position, .5, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	$Tween.start()
-	print("start tween 2")
+	yield($Tween,"tween_completed")
+	$Sprite.z_index = 0
+	focused = false
 	pass
 
 
 
 func _on_Tween_tween_all_completed() -> void:
+	
 	$Tween.stop_all()
+	CoreSystemManager.turn = true
+	set_process_unhandled_input(true)
+	CoreSystemManager.process = true
 	pass # Replace with function body.
