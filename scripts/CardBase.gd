@@ -1,6 +1,8 @@
 extends RigidBody2D
 
 
+var pre_heal = preload("res://scenes/HealEffect.tscn")
+
 # =====================================================
 # Propriedade das Cartas
 # =====================================================
@@ -105,7 +107,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 # Chamado ao Instanciar uma Carta
-func _ready() -> void:
+func _ready() -> void:	
+	
 	global_initial_position = global_position
 	initial_position = position
 	
@@ -293,7 +296,10 @@ func _on_interacting_card() -> void:
 		CoreSystemManager.turn = false
 		_on_card.call_anim_hit()
 		pass
-	
+	if my_info["Type"] == "Action" and my_info["Description"] == "Potion" and _on_card.my_info["Type"] == "Player":
+		CoreSystemManager.turn = true
+		_on_card.heal()
+		pass
 	pass
 
 
@@ -328,6 +334,11 @@ func atk_player():
 	$Sprite.z_index = 0
 	pass
 
+
+func heal():
+	var heal = pre_heal.instance()
+	add_child(heal)
+	pass
 
 
 func _on_Tween_tween_all_completed() -> void:
