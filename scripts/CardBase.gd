@@ -321,8 +321,11 @@ func atk_player():
 	$Tween.interpolate_property(self, "position", position, initial_position, .5, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	$Tween.start()
 	yield($Tween,"tween_completed")
-	$Sprite.z_index = 0
+	clicked = false
 	focused = false
+	get_parent().scale = Vector2(1.1,1.1)
+	get_parent().self_modulate = Color(1,1,1)
+	$Sprite.z_index = 0
 	pass
 
 
