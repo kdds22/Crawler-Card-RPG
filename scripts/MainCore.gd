@@ -14,10 +14,7 @@ var potion : bool = false # flag de já foi instanciado uma Poção
 
 # Para cada Position2D dentro de $Cards,
 # instancia uma carta base (CardBase)
-func _ready() -> void:
-	
-	CoreSystemManager.set_distance_difficulty(5)
-	
+func _ready() -> void:	
 	randomize()
 	for i in all_pos:
 		start_pre_card_base(i)

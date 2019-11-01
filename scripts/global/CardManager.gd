@@ -196,10 +196,8 @@ func start_random_local(index : int, group : String, change : bool) -> Dictionar
 		name = "Forest"
 		description = "Light"
 		image = image_local[1]
-	
-	var start_distances : Array = CoreSystemManager.start_card_distance(false, 0)
-	
-	var local = return_card_info(type, name, image, group, 0, description, false, Color(.05,.05,1.5,1), index, start_distances[0], start_distances[1])
+		
+	var local = return_card_info(type, name, image, group, 0, description, false, Color(.05,.05,1.5,1), index, CoreSystemManager.goal_distance, CoreSystemManager.special_item_distance)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
 	match group:
@@ -239,40 +237,17 @@ func random_player(index : int, group : String, change : bool) -> Dictionary:
 
 
 # Retorna um Local aleatorio se puder 
+# O CHANGE serve pra indicar se virá um novo tipo de LOCAL
 func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 #func random_local(index : int, group : String, change : bool) -> Dictionary:
-	
+	print("\n\nChange RANDOM_LOCAL: ",change," - Index: ",index,"\n\n")
 	var type := "Local"
 	var name : String
 	var image : String
 	var local_chance : int
 	
-	var distance_goal : int = CoreSystemManager.goal_distance
-	var distance_special_item : int = CoreSystemManager.special_item_distance
-	
-	if info["Index"] == index:
-		
-		if info["Distance_Goal"] > info["Distance_Special_Item"]:
-			CoreSystemManager.increment_quest_distance()
-			CoreSystemManager.actual_focus_distance = 0
-		else:
-			CoreSystemManager.increment_special_item_distance()
-			CoreSystemManager.actual_focus_distance = 1
-		
-		distance_goal = CoreSystemManager.goal_distance
-		distance_special_item = CoreSystemManager.special_item_distance
-	else:
-		
-		var goal_item
-		if info["Distance_Goal"] > info["Distance_Special_Item"]:
-			goal_item = 0
-		else:
-			goal_item = 1
-		
-		# definindo a distancia do CoreLoop
-		var distance = CoreSystemManager.start_card_distance(true, goal_item)
-		distance_goal = distance[0]
-		distance_special_item = distance[1]
+	var distance_goal = CoreSystemManager.goal_distance
+	var distance_special_item = CoreSystemManager.special_item_distance
 	
 	if change:
 		local_chance = CoreSystemManager.get_chance()
@@ -285,8 +260,6 @@ func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 	else:
 		name = CoreSystemManager.actual_card_local["Name"]
 		image = CoreSystemManager.actual_card_local["Image"]
-	
-	
 	
 	var local = return_card_info(type, name, image, info["Group"], 0, "", false, Color(.05,.05,1.5,1), info["Index"], distance_goal, distance_special_item)
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
