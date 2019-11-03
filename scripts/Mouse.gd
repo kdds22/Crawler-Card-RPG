@@ -12,7 +12,6 @@ func _process(delta: float) -> void:
 # Detecção do Body com Mouse_Area (ENTRADA)
 func _on_Mouse_body_entered(body: PhysicsBody2D) -> void:
 	CardManager._on_card_interacting = body
-	print("\nMouse Entrou: ",body.my_info["Name"], "\n")
 	pass # func _on_Mouse_body_entered
 
 
@@ -20,5 +19,4 @@ func _on_Mouse_body_entered(body: PhysicsBody2D) -> void:
 func _on_Mouse_body_exited(body: PhysicsBody2D) -> void:
 	CardManager._on_card_interacting = null
 	body.position = body.initial_position
-	print("\nMouse Saiu: ",body.my_info["Name"], "\n")
 	pass # func _on_Mouse_body_exited

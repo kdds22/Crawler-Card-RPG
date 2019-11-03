@@ -17,32 +17,40 @@ onready var image_item_weapon = ["res://assets/arma/arco.png",
 #########################################################################################################
 # Fim do Pré-Carregamento
 #########################################################################################################
-#########################################################################################################
+
+
 #########################################################################################################
 # Armazenar Referencia da Carta Instanciada
 #########################################################################################################
 
-var ref_player
-var ref_left_arm
-var ref_right_arm
-var ref_left_action
-var ref_right_action
-var ref_move = {"ref_left_move" : {}, "ref_middle_move" : {}, "ref_right_move" : {}}
+var ref_player # referencia da carta-player
+var ref_left_arm # referencia da mão-esquerda do player
+var ref_right_arm # referencia da mão-direita do player
+var ref_left_action # referencia da carta-ação (meio) a esquerda
+var ref_right_action # referencia da carta-açõa (meio) a direita
+# referencia das cartas-locais (cima)
+var ref_move = {"ref_leftMove" : {}, "ref_middleMove" : {}, "ref_rightMove" : {}}
 
 #########################################################################################################
 # Fim do Armazenamento da Referencia
 #########################################################################################################
-#########################################################################################################
+
+
 #########################################################################################################
 # Referencia da Interoperabilidade das Cartas ESCOLHIDAS
 #########################################################################################################
 
-var card_clicked : RigidBody2D
-var card_released : RigidBody2D
+var card_clicked : RigidBody2D # carta-clicada 
+var card_released : RigidBody2D # com qual carta a carta-clicada irá interagir
 
 var _on_card_interacting : RigidBody2D
 
-var interaction : bool = false
+var interaction : bool = false # se haverá ou não interação entre Cartas
+
+# LOCAL-DIRECTION
+# TRUE = GOAL; FALSE = ITEM
+var direction_move = {"leftMove_direction" : true, "rightMove_direction" : true, "middleMove_direction" : true}
+
 #########################################################################################################
 # Fim da Referencia da Interoperabilidade das Cartas ESCOLHIDAS
 #########################################################################################################
@@ -51,49 +59,47 @@ var interaction : bool = false
 
 func _ready() -> void:
 	randomize()
-	CoreSystemManager.turn = true
+	CoreSystemManager.turn = true # Turno do Jogador
 	
 	pass # func _ready
 
 
 # LIMPA a Interoperabilidade entre as cartas
 func clear_maked() -> void:
-	card_clicked = null
-	card_released = null
+	card_clicked = null # limpa a carta-clicada
+	card_released = null # limpa a carta-"soltada"-released
 	
 	pass # func clear_maked
 
 
-# retorna um VECTOR2 com uma IMAGEM, o TIPO e um NOME para um especifico tipo de Carta
+# retorna um tipo (dicionario) de uma carta
 func get_card_type_start(value : String, index : int, change : bool):
 	
-	# Retorna uma ARMA
-	if value == "leftArm" or value == "rightArm":
-		return random_weapon(index, value, change)
-		
-		pass # if value Arm
-
-
-	# Retorna um INIMIGO ou uma POCAO
-	if value == "leftAction" or value == "rightAction":
-		return random_action(index, value, change)
-		
-		pass # if value Action
-
-
-	# Retorna um LOCAL [Floresta ou Dungeon]
-	if value == "leftMove" or value == "rightMove" or value == "middleMove":
-		return start_random_local(index, value, change)
-		
-		pass # if value Move
-
-
-	# Retorna um personagem [Guerreiro, Mago, Ladino], setado previamente numa variavel Global
-	if value == "player":
-		return random_player(index, value, change)
-		
-		pass # if value player
-
+	match value:
+		"leftArm": # Retorna uma ARMA
+			return random_weapon(index, value, change)
+			
+		"rightArm": # Retorna uma ARMA
+			return random_weapon(index, value, change)
+			
+		"leftAction": # Retorna um INIMIGO ou uma POCAO
+			return random_action(index, value, change)
+			
+		"rightAction": # Retorna um INIMIGO ou uma POCAO
+			return random_action(index, value, change)
+			
+		"leftMove": # Retorna um LOCAL [Floresta ou Dungeon]
+			return start_random_local(index, value, change)
+			
+		"rightMove": # Retorna um LOCAL [Floresta ou Dungeon]
+			return start_random_local(index, value, change)
+			
+		"middleMove": # Retorna um LOCAL [Floresta ou Dungeon]
+			return start_random_local(index, value, change)
+			
+		"player": # Retorna um personagem [Guerreiro, Mago, Ladino], setado previamente numa variavel Global
+			return random_player(index, value, change)
+	
 	pass # func get_card_type
 
 
@@ -139,8 +145,6 @@ func random_weapon(index : int, group : String, change : bool) -> Dictionary:
 		"leftArm" : ref_left_arm = weapon
 		"rightArm" : ref_right_arm = weapon
 	
-#	print("Arma Referencias: ", ref_left_arm, " - ", ref_right_arm)
-	
 	return weapon
 	# func random_weapon
 
@@ -173,7 +177,6 @@ func random_action(index : int, group : String, change : bool) -> Dictionary:
 		"leftAction" : ref_left_action = action
 		"rightAction" : ref_right_action = action
 	print()
-#	print("Ações Referencias: ", ref_left_action, " - ", ref_right_action)
 	
 	return action
 	# func random_action
@@ -187,6 +190,8 @@ func start_random_local(index : int, group : String, change : bool) -> Dictionar
 	var image : String
 	var description : String
 	var local_chance : int
+	var direction_start : bool
+	
 	local_chance = CoreSystemManager.get_chance()
 	if local_chance < 50:
 		name = "Dungeon"
@@ -196,19 +201,73 @@ func start_random_local(index : int, group : String, change : bool) -> Dictionar
 		name = "Forest"
 		description = "Light"
 		image = image_local[1]
+	
+	var goal_item = CoreSystemManager.start_local_card_goal_item() # Armazena o contador inicial das direções -> [0] = GOAL, [1] = SPECIAL_ITEM
+	print(goal_item," -> startado")
+	if goal_item[0] > goal_item[1]:
+		direction_start = true
+	else:
+		direction_start = false
 		
-	var local = return_card_info(type, name, image, group, 0, description, false, Color(.05,.05,1.5,1), index, CoreSystemManager.goal_distance, CoreSystemManager.special_item_distance)
+	
+	var local = return_card_info(type, name, image, group, 0, description, false, Color(.05,.05,1.5,1), index, goal_item[0], goal_item[1])
 	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
 	
-	match group:
-		"rightMove" : ref_move["ref_right_move"] = local
-		"leftMove" : ref_move["ref_left_move"] = local
-		"middleMove" : ref_move["ref_middle_move"] = local
+	ref_move["ref_"+group] = local
+	direction_move[group+"_direction"] = direction_start
 	
 	print()
 	
 	return local
 	# func start_random_local
+
+
+
+# Retorna um Local aleatorio se puder 
+# O CHANGE serve pra indicar se virá um novo tipo de LOCAL
+func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
+	print("\n\nChange RANDOM_LOCAL: ",change," - Index: ",index,"\n\n")
+	var name : String
+	var image : String
+	var local_chance : int # chance de mudança de ambiente, se puder
+	
+	var goal_distance = CoreSystemManager.goal_distance
+	var special_item_distance = CoreSystemManager.special_item_distance
+	
+	# Mantem a direção da carta ESCOLHIDA e aumenta o contador especifico
+	if index == info["Index"]:
+		var distance = CoreSystemManager.increment_decrement_distance_card_local(info["Distance_Goal"], info["Distance_Special_Item"])
+		goal_distance = distance[0]
+		special_item_distance = distance[1]
+		direction_move[info["Group"]+"_direction"] = distance[2]
+	else:
+		var distance = CoreSystemManager.increment_decrement_distance_card_local(CoreSystemManager.actual_card_local["Distance_Goal"], CoreSystemManager.actual_card_local["Distance_Special_Item"])
+		goal_distance = distance[0]
+		special_item_distance = distance[1]
+		direction_move[info["Group"]+"_direction"] = CoreSystemManager.get_goal_or_specialItem()
+	
+	if change: # se o ambiente mudar
+		local_chance = CoreSystemManager.get_chance()
+		if local_chance < 50:
+			name = "Dungeon"
+			image = image_local[0]
+		elif local_chance >= 50:
+			name = "Forest"
+			image = image_local[1]
+	else: # se o ambiente continuar imutavel
+		name = CoreSystemManager.actual_card_local["Name"]
+		image = CoreSystemManager.actual_card_local["Image"]
+	
+	var local = return_card_info("Local", name, image, info["Group"], 0, "", false, Color(.05,.05,1.5,1), info["Index"], goal_distance, special_item_distance)
+	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
+	
+	
+	# Armazenar uma referencia da NOVA carta-local, por grupo
+	ref_move["ref_"+info["Group"]] = local
+	
+	return local
+	# func random_local
+
 
 
 # Retorna um Personagem Aleatório
@@ -230,47 +289,9 @@ func random_player(index : int, group : String, change : bool) -> Dictionary:
 	
 	print()
 	
-#	print("Player Referencias: ", ref_player)
-	
 	return player
 	# func random_player
 
-
-# Retorna um Local aleatorio se puder 
-# O CHANGE serve pra indicar se virá um novo tipo de LOCAL
-func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
-#func random_local(index : int, group : String, change : bool) -> Dictionary:
-	print("\n\nChange RANDOM_LOCAL: ",change," - Index: ",index,"\n\n")
-	var type := "Local"
-	var name : String
-	var image : String
-	var local_chance : int
-	
-	var distance_goal = CoreSystemManager.goal_distance
-	var distance_special_item = CoreSystemManager.special_item_distance
-	
-	if change:
-		local_chance = CoreSystemManager.get_chance()
-		if local_chance < 50:
-			name = "Dungeon"
-			image = image_local[0]
-		elif local_chance >= 50:
-			name = "Forest"
-			image = image_local[1]
-	else:
-		name = CoreSystemManager.actual_card_local["Name"]
-		image = CoreSystemManager.actual_card_local["Image"]
-	
-	var local = return_card_info(type, name, image, info["Group"], 0, "", false, Color(.05,.05,1.5,1), info["Index"], distance_goal, distance_special_item)
-	#Tipo, Nome, Imagem, Group, Power, Description, Has_Item, Moldure_Color, Index, Distance_Goal, Distance_Special_Item
-	
-	match info["Group"]:
-		"rightMove" : ref_move["ref_right_move"] = local
-		"leftMove" : ref_move["ref_left_move"] = local
-		"middleMove" : ref_move["ref_middle_move"] = local
-	
-	return local
-	# func random_local
 
 
 # Chamado ao clicar em uma Carta de Movimentação (LOCAL)
@@ -283,18 +304,19 @@ func local_card_clicked(value : Dictionary, pos_table : Sprite, index : int) -> 
 	for i in ref_move:
 		return_local = {}
 		
-		var pre_local_change = CoreSystemManager.get_local_change()
+		var pre_local_change = CoreSystemManager.get_local_change() # se poderá mudar de ambiente
+		var local_or_item = CoreSystemManager.get_local_or_item() # se a proxima carta será um ambiente ou um item
+		
 		if pre_local_change:
-			var local_or_item = CoreSystemManager.get_local_or_item()
-			
 			if local_or_item == "Local":
 				return_local = random_local(ref_move[i], true, index)
 			elif local_or_item == "Item": # chamar um ITEM ao inves de um LOCAL (futuramente)
 				return_local = random_local(ref_move[i], true, index)
-		
 		else:
-			value = ref_move[i]
-			return_local = random_local(ref_move[i], false, index)
+			if local_or_item == "Local":
+				return_local = random_local(ref_move[i], false, index)
+			elif local_or_item == "Item": # chamar um ITEM ao inves de um LOCAL (futuramente)
+				return_local = random_local(ref_move[i], false, index)
 		
 		return_array_local.append(return_local)
 		

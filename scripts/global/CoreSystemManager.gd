@@ -14,14 +14,17 @@ const SPECIAL_ITEM_MAX : int = 100     # [%] PORCENTAGEM MAXIMA DO ITEM ESPECIAL
 
 ##### CONTROLE MUTÁVEIS DO JOGO, SERÁ USADO PRA CONTROLAR AS INFORMAÇÕES COM BASE NAS CONSTANTES #####
 
-export var local_qtd : int = 0
-export var goal_distance : int = 0
-export var special_item_distance : int = 0
-export var actual_distance_difficulty : int = 0
+export var local_qtd : int = 0 # quantidade de cartas-locais de um mesmo tipo
 
-export var actual_focus_distance : int = 0 # 0 = Goal , 1 = Special_Item
+export var goal_distance : int = 0 # distancia para o objetivo da quest em relação ao GOAL_MAX
+export var special_item_distance : int = 0 # distancia para o item especial da quest em relação ao SPECIAL_ITEM_MAX
 
+export var actual_distance_difficulty : int = 0 # "dificuldade" da quest... o quão dificil é chegar nos "..._MAX"
 
+export var actual_focus_distance : bool = true # true = Goal , false = Special_Item
+
+###
+# valores iniciais (para testes de balanceamento basico)
 export var player_hp : int = 10
 export var weapon_damage : int = 5
 export var potion_cure : int = 5
@@ -34,7 +37,7 @@ export var enemy_atk : int = 2
 
 ##### Actual Cards #####
 
-export var actual_card_local : Dictionary
+var actual_card_local : Dictionary # carta-local escolhida
 
 ##### Actual Cards #####
 
@@ -52,12 +55,42 @@ func get_chance() -> int:
 
 
 # GETa a direção para o Objetivo ou Item Especial
-func get_goal_or_specialItem() -> int:
+func get_goal_or_specialItem() -> bool:
 	if get_chance() <= 50:
-		actual_focus_distance = 1
-	else: actual_focus_distance = 0
+		actual_focus_distance = false
+	else: actual_focus_distance = true
 	
 	return actual_focus_distance # func get_goal_or_specialItem
+
+
+# RETORNA um contador INICIAL para as cartas-locais startadas
+func start_local_card_goal_item() -> Array:
+	var chance = get_chance()
+	if chance >= 50:
+		print("\nRetornou Objetivo: [55, 45]")
+		return [55, 45]
+	else:
+		print("\nRetornou Item_Especial: [45, 55]")
+		return [45, 55]
+	
+	# func start_local_card_goal_item
+
+
+# RETORNA novos valores para os contadores, INCREMENTANDO ou DECREMENTANDO
+func increment_decrement_distance_card_local(goal, item) -> Array:
+	var direction : bool
+	if goal > item:
+		goal_distance = goal + actual_distance_difficulty
+		special_item_distance = item - actual_distance_difficulty
+		direction = true
+	else:
+		goal_distance = goal - actual_distance_difficulty
+		special_item_distance = item + actual_distance_difficulty
+		direction = false
+	
+	return [goal_distance, special_item_distance, direction]
+	
+	# return func increment_decrement_distance_card_local
 
 
 # Retorna a possibilidade de ser um Cenario ou um Item

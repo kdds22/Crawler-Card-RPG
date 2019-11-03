@@ -59,11 +59,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if focused:
 			if event.is_action_pressed("click"):
 				match my_info["Type"]: # Verificação dos Tipos de carta... like StateMachine
+					
 					"Local":
-						print("\nOps, clicou num:, "+my_info["Type"])
 						get_node(main_core_path).card_clicked(self)
-					_:
-						print("\nOps, clicou num:, "+my_info["Type"])
+					
+					_: # MATCH/SWITCH DEFAULT
 						clicked = true
 						$Sprite.z_index = 1
 				
@@ -74,20 +74,20 @@ func _unhandled_input(event: InputEvent) -> void:
 				position = initial_position
 				$Sprite.z_index = 0
 				if clicked:
-					print(my_info["Name"], " - Soltei - ", clicked)
 					clicked = false
 					$Sprite.z_index = 0
-					print("\nunclicked: ",my_info["Name"]," - ", clicked)
 					position = initial_position
-					
+					focused = false
+					# Manter o SLOT da Carta-Arma ATIVADO?????????????? testar pra verificar ... 
+#																							get_parent().scale = Vector2(1.1,1.1)
+#																							get_parent().self_modulate = Color(1,1,1)
 					if CardManager._on_card_interacting != null:
-						print("\nInteração com: ",CardManager._on_card_interacting.my_info["Name"])
 						_on_interacting_card()
 					else:
-						print("\n\nvaziooooo.... nenhuma interação\n\n")
+						print("\n\n_unhandled_input > if event.is_action_released(click) > if clicked > else CardManager._on_card_interacting != null \n\n")
 					
 				else:
-					print(my_info["Name"], ", interação - ", clicked)
+					print("_unhandled_input > if event.is_action_released(click) : ",my_info["Name"], ", interação - ", clicked)
 	
 	
 		if clicked and event is InputEventMouseMotion:
@@ -107,7 +107,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 # Chamado ao Instanciar uma Carta
-func _ready() -> void:	
+func _ready() -> void:
 	
 	global_initial_position = global_position
 	initial_position = position
@@ -116,13 +116,11 @@ func _ready() -> void:
 		$Sprite/TextureProgressGoal.value = my_info["Distance_Goal"]
 		$Sprite/TextureProgressItem.value = my_info["Distance_Special_Item"]
 		
-		if my_info["Distance_Goal"] > my_info["Distance_Special_Item"]:
+		if CardManager.direction_move[my_info["Group"]+"_direction"]:
 			$Sprite/TextureProgressGoal/Anim.play("signal")
-		elif my_info["Distance_Goal"] < my_info["Distance_Special_Item"]:
-			$Sprite/TextureProgressItem/Anim.play("signal")
 		else:
-			$Sprite/TextureProgressGoal/Anim.play("signal")
 			$Sprite/TextureProgressItem/Anim.play("signal")
+
 	pass # func _ready
 
 
@@ -137,7 +135,6 @@ func _process(delta: float) -> void:
 # SETa TODAS as informações/atributos da Carta
 # Chamando todas as funções individuais pra cada atributo
 func set_card_atributes(value : Dictionary) -> void:
-#	clean_info_card()
 	set_name_type(value["Type"])
 	set_image_type(value["Image"])
 	set_name_desc(value["Name"])
@@ -245,7 +242,6 @@ func cristal_rect(rect2_mini : Rect2, rect2_big : Rect2) -> void:
 func _on_CardBase_mouse_entered() -> void:
 	if CoreSystemManager.process:
 		focused = true
-		print(my_info["Name"], "\nFocado: ", focused)
 		get_parent().scale = Vector2(1.2,1.2)
 		get_parent().self_modulate = my_info["Moldure_Color"]
 	
@@ -257,7 +253,6 @@ func _on_CardBase_mouse_exited() -> void:
 	if CoreSystemManager.process:
 		if not moving:
 			focused = false
-			print(my_info["Name"], "\nFocado: ", focused)
 			clicked = false
 			get_parent().scale = Vector2(1.1,1.1)
 			get_parent().self_modulate = Color(1,1,1)
@@ -289,9 +284,9 @@ func pickable(value : bool) -> void:
 	pass # func pickable
 
 
+# ACIONA a Interação com a Carta-Escolhida
 func _on_interacting_card() -> void:
 	var _on_card = CardManager._on_card_interacting
-	print("\n_on_interacting_card - my_info: \n",my_info)
 	if my_info["Type"] == "Weapon" and _on_card.my_info["Type"] == "Action" and _on_card.my_info["Name"] == "Ogre":
 		CoreSystemManager.turn = false
 		_on_card.call_anim_hit()
@@ -300,25 +295,23 @@ func _on_interacting_card() -> void:
 		CoreSystemManager.turn = true
 		_on_card.heal()
 		pass
-	pass
+	pass # func _on_interacting_card
 
 
+# DETECTA de um Corpo ENTROU ou SAIU
 func _on_Detect_body_entered(body: PhysicsBody2D) -> void:
 	if body != self and clicked: # and body.focused:
-		print("\n",body.focused,"\n")
 		print("Entrou em: ",body.my_info["Name"], " -> ",self.my_info["Name"], ", Modo: ",body.mode)
-#		card_info_interacting = body
 	pass
 
 func _on_Detect_body_exited(body: PhysicsBody2D) -> void:
 	if body != self and body.focused: # and body.focused:
-		print("\n",body.focused,"\n")
 		print("Saiu de: ",body.my_info["Name"], " -> ",self.my_info["Name"])
 		card_info_interacting = null
 	pass # Replace with function body.
 
 
-
+# O SISTEMA Usa o que tiver a disposição pra ATACAR o PLAYER, no caso, os inimigos.... por enquanto
 func atk_player():
 	$Tween.interpolate_property(self, "global_position", global_position, get_node("/root/MainCore").ref_player.global_position, .5, Tween.TRANS_EXPO, Tween.EASE_IN)
 	$Tween.start()
@@ -332,19 +325,22 @@ func atk_player():
 	get_parent().scale = Vector2(1.1,1.1)
 	get_parent().self_modulate = Color(1,1,1)
 	$Sprite.z_index = 0
-	pass
+	
+	pass # func atk_player
 
 
+# Metodo pra CURAR o Player (atualmente, só por poção)
 func heal():
 	var heal = pre_heal.instance()
 	add_child(heal)
-	pass
+	pass # func heal
 
 
+# Metodo chamado quando os TWEENs do Sistema terminarem e dá a vez/turno ao Jogador
 func _on_Tween_tween_all_completed() -> void:
 	
 	$Tween.stop_all()
 	CoreSystemManager.turn = true
 	set_process_unhandled_input(true)
 	CoreSystemManager.process = true
-	pass # Replace with function body.
+	pass # func _on_Tween_tween_all_completed
