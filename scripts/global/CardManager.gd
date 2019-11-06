@@ -236,10 +236,21 @@ func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 	
 	# Mantem a direção da carta ESCOLHIDA e aumenta o contador especifico
 	if index == info["Index"]:
+		print("----------->",info["Distance_Goal"], info["Distance_Special_Item"])
 		var distance = CoreSystemManager.increment_decrement_distance_card_local(info["Distance_Goal"], info["Distance_Special_Item"])
 		goal_distance = distance[0]
 		special_item_distance = distance[1]
 		direction_move[info["Group"]+"_direction"] = distance[2]
+		#parei aqui!
+		print("\n\n\nDistance: ",distance[2]," - ",direction_move[info["Group"]+"_direction"])
+#		var direction = CoreSystemManager.get_chance()
+#		if direction >= 50:
+		if distance[2]:
+			get_node("/root/MainCore/CoreDirection/HSlider").value += CoreSystemManager.actual_distance_difficulty
+		else:
+			get_node("/root/MainCore/CoreDirection/HSlider").value -= CoreSystemManager.actual_distance_difficulty
+			
+		
 	else:
 		var distance = CoreSystemManager.increment_decrement_distance_card_local(CoreSystemManager.actual_card_local["Distance_Goal"], CoreSystemManager.actual_card_local["Distance_Special_Item"])
 		goal_distance = distance[0]

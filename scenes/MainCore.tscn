@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/MainCore.gd" type="Script" id=1]
 [ext_resource path="res://scripts/CardsTable.gd" type="Script" id=2]
 [ext_resource path="res://scripts/Mouse.gd" type="Script" id=3]
+[ext_resource path="res://scenes/CoreDirection.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 1.0
@@ -15,6 +16,7 @@ __meta__ = {
 
 [node name="Cards" type="Node2D" parent="."]
 editor/display_folded = true
+position = Vector2( 0, 40 )
 
 [node name="PosPlayer" type="Position2D" parent="Cards" groups=[
 "player",
@@ -57,6 +59,7 @@ position = Vector2( 360, 71 )
 position = Vector2( 450, 71 )
 
 [node name="CardsTable" type="Node2D" parent="."]
+position = Vector2( 0, 40 )
 script = ExtResource( 2 )
 
 [node name="Mouse" type="Area2D" parent="."]
@@ -64,5 +67,8 @@ script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mouse"]
 shape = SubResource( 1 )
+
+[node name="CoreDirection" parent="." instance=ExtResource( 4 )]
+position = Vector2( 210, 10 )
 [connection signal="body_entered" from="Mouse" to="Mouse" method="_on_Mouse_body_entered"]
 [connection signal="body_exited" from="Mouse" to="Mouse" method="_on_Mouse_body_exited"]

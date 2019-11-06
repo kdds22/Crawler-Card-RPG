@@ -14,14 +14,14 @@ const SPECIAL_ITEM_MAX : int = 100     # [%] PORCENTAGEM MAXIMA DO ITEM ESPECIAL
 
 ##### CONTROLE MUTÁVEIS DO JOGO, SERÁ USADO PRA CONTROLAR AS INFORMAÇÕES COM BASE NAS CONSTANTES #####
 
-export var local_qtd : int = 0 # quantidade de cartas-locais de um mesmo tipo
+var local_qtd : int = 0 # quantidade de cartas-locais de um mesmo tipo
 
-export var goal_distance : int = 0 # distancia para o objetivo da quest em relação ao GOAL_MAX
-export var special_item_distance : int = 0 # distancia para o item especial da quest em relação ao SPECIAL_ITEM_MAX
+var goal_distance : int = 0 # distancia para o objetivo da quest em relação ao GOAL_MAX
+var special_item_distance : int = 0 # distancia para o item especial da quest em relação ao SPECIAL_ITEM_MAX
 
-export var actual_distance_difficulty : int = 0 # "dificuldade" da quest... o quão dificil é chegar nos "..._MAX"
+var actual_distance_difficulty : int = 0 # "dificuldade" da quest... o quão dificil é chegar nos "..._MAX"
 
-export var actual_focus_distance : bool = true # true = Goal , false = Special_Item
+var actual_focus_distance : bool = true # true = Goal , false = Special_Item
 
 ###
 # valores iniciais (para testes de balanceamento basico)
@@ -87,7 +87,7 @@ func increment_decrement_distance_card_local(goal, item) -> Array:
 		goal_distance = goal - actual_distance_difficulty
 		special_item_distance = item + actual_distance_difficulty
 		direction = false
-	
+		
 	return [goal_distance, special_item_distance, direction]
 	
 	# return func increment_decrement_distance_card_local
