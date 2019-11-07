@@ -78,12 +78,20 @@ func start_local_card_goal_item() -> Array:
 func increment_decrement_distance_card_local(goal, item, dir) -> Array:
 	var direction : bool
 	if dir:
-		goal_distance = goal + actual_distance_difficulty
-		special_item_distance = item - actual_distance_difficulty
+		if item <= (actual_distance_difficulty - 1):
+			goal_distance = goal + actual_distance_difficulty
+			special_item_distance = 0
+		else:
+			goal_distance = 0
+			special_item_distance = item - actual_distance_difficulty
 		direction = true
 	else:
-		goal_distance = goal - actual_distance_difficulty
-		special_item_distance = item + actual_distance_difficulty
+		if goal <= (actual_distance_difficulty - 1):
+			special_item_distance = item + actual_distance_difficulty
+			goal_distance = 0
+		else:
+			special_item_distance = 0
+			goal_distance = goal - actual_distance_difficulty
 		direction = false
 	
 	return [goal_distance, special_item_distance, direction]
