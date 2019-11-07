@@ -67,19 +67,17 @@ func get_goal_or_specialItem() -> bool:
 func start_local_card_goal_item() -> Array:
 	var chance = get_chance()
 	if chance >= 50:
-		print("\nRetornou Objetivo: [55, 45]")
-		return [55, 45]
+		return [actual_distance_difficulty, 0]
 	else:
-		print("\nRetornou Item_Especial: [45, 55]")
-		return [45, 55]
+		return [0, actual_distance_difficulty]
 	
 	# func start_local_card_goal_item
 
 
 # RETORNA novos valores para os contadores, INCREMENTANDO ou DECREMENTANDO
-func increment_decrement_distance_card_local(goal, item) -> Array:
+func increment_decrement_distance_card_local(goal, item, dir) -> Array:
 	var direction : bool
-	if goal > item:
+	if dir:
 		goal_distance = goal + actual_distance_difficulty
 		special_item_distance = item - actual_distance_difficulty
 		direction = true
@@ -87,7 +85,7 @@ func increment_decrement_distance_card_local(goal, item) -> Array:
 		goal_distance = goal - actual_distance_difficulty
 		special_item_distance = item + actual_distance_difficulty
 		direction = false
-		
+	
 	return [goal_distance, special_item_distance, direction]
 	
 	# return func increment_decrement_distance_card_local

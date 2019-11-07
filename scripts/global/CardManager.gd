@@ -231,31 +231,31 @@ func random_local(info : Dictionary, change : bool, index : int) -> Dictionary:
 	var image : String
 	var local_chance : int # chance de mudança de ambiente, se puder
 	
-	var goal_distance = CoreSystemManager.goal_distance
-	var special_item_distance = CoreSystemManager.special_item_distance
+	var goal_distance : int
+	var special_item_distance : int
 	
 	# Mantem a direção da carta ESCOLHIDA e aumenta o contador especifico
 	if index == info["Index"]:
 		print("----------->",info["Distance_Goal"], info["Distance_Special_Item"])
-		var distance = CoreSystemManager.increment_decrement_distance_card_local(info["Distance_Goal"], info["Distance_Special_Item"])
+		var dir = direction_move[info["Group"]+"_direction"]
+		var distance = CoreSystemManager.increment_decrement_distance_card_local(info["Distance_Goal"], info["Distance_Special_Item"], dir)
 		goal_distance = distance[0]
 		special_item_distance = distance[1]
-		direction_move[info["Group"]+"_direction"] = distance[2]
+#		direction_move[info["Group"]+"_direction"] = distance[2]
 		#parei aqui!
-		print("\n\n\nDistance: ",distance[2]," - ",direction_move[info["Group"]+"_direction"])
+		print("\n\n\nDistance: ",distance[2]," ->>>> ",direction_move[info["Group"]+"_direction"])
 #		var direction = CoreSystemManager.get_chance()
 #		if direction >= 50:
-		if distance[2]:
+		if direction_move[info["Group"]+"_direction"]:
 			get_node("/root/MainCore/CoreDirection/HSlider").value += CoreSystemManager.actual_distance_difficulty
 		else:
 			get_node("/root/MainCore/CoreDirection/HSlider").value -= CoreSystemManager.actual_distance_difficulty
-			
-		
 	else:
-		var distance = CoreSystemManager.increment_decrement_distance_card_local(CoreSystemManager.actual_card_local["Distance_Goal"], CoreSystemManager.actual_card_local["Distance_Special_Item"])
+		direction_move[info["Group"]+"_direction"] = CoreSystemManager.get_goal_or_specialItem()
+		var dir = direction_move[info["Group"]+"_direction"]
+		var distance = CoreSystemManager.increment_decrement_distance_card_local(CoreSystemManager.actual_card_local["Distance_Goal"], CoreSystemManager.actual_card_local["Distance_Special_Item"], dir)
 		goal_distance = distance[0]
 		special_item_distance = distance[1]
-		direction_move[info["Group"]+"_direction"] = CoreSystemManager.get_goal_or_specialItem()
 	
 	if change: # se o ambiente mudar
 		local_chance = CoreSystemManager.get_chance()
