@@ -1,8 +1,10 @@
 extends Node2D
 
+signal system_turn
 
 onready var pre_card_base = preload("res://scenes/CardBase.tscn")
 onready var all_pos = $Cards.get_children()
+onready var cronometro = get_node("../Cronometro")
 
 
 var ref_player : Object
@@ -17,6 +19,8 @@ var potion : bool = false # flag de já foi instanciado uma Poção
 func _ready() -> void:
 	
 	CoreSystemManager.actual_distance_difficulty = 5 # SETA uma dificuldade para DISTANCIA
+	
+	cronometro.connect("timeout", self, "turn_off")
 	
 	randomize()
 	for i in all_pos:
@@ -99,5 +103,10 @@ func call_new_locals() -> void:
 		remove_card($CardsTable.get_child(CardManager.ref_move[i]["Index"]).get_child(0))
 	
 	pass # func call_new_locals
+
+
+# Chamado pelo Cronometro, ao terminar o segundos necessarios pra realizar uma ação
+func turn_off():
+	emit_signal("system_turn")
 	
-	
+	pass

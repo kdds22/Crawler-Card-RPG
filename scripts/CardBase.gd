@@ -25,6 +25,8 @@ var clicked := false # usado como um FLAG de clique unico
 var moving := false 
 var handling := false
 
+var count_cards_calls : int = 0
+
 var interactin_flag_clicked : bool = false
 var interactin_flag_n_clicked : bool = false
 
@@ -96,11 +98,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			if my_info["Type"] == "Action" and my_info["Description"] == "Potion":
 				moving = true
 	else: # verifica se esta no turno do sistema / inimigos / npc
-		if event.is_action_pressed("atk_enemy") or (my_info["Type"] == "Action" and my_info["Description"] == "Enemy"):
-			set_process_unhandled_input(false)
-			CoreSystemManager.process = false
-			yield(get_tree().create_timer(1, false),"timeout")
-			atk_player()
+		system_turn()
 		
 	
 	pass # func _input
@@ -108,6 +106,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
+	
+	get_node(main_core_path).connect("system_turn", self, "call_signals")
+	
+	
 	
 	global_initial_position = global_position
 	initial_position = position
@@ -336,11 +338,42 @@ func heal():
 	pass # func heal
 
 
+# Função de AÇÂO Básica do SISTEMA
+func system_turn():
+	if my_info["Type"] == "Action" and my_info["Description"] == "Enemy":
+			turn_on_player(false)
+			yield(get_tree().create_timer(1, false),"timeout")
+			count_cards_calls += 1
+			atk_player()
+	else:
+		count_cards_calls += 1 # contagem do total de cartas (que não seja inimigo)
+	
+	if count_cards_calls >= 4: # minimo de 4 cartas pra voltar o turno do jogador 
+		turn_on_player(true)
+	
+	pass
+
 # Metodo chamado quando os TWEENs do Sistema terminarem e dá a vez/turno ao Jogador
 func _on_Tween_tween_all_completed() -> void:
 	
 	$Tween.stop_all()
-	CoreSystemManager.turn = true
-	set_process_unhandled_input(true)
-	CoreSystemManager.process = true
+	turn_on_player(true)
+	
 	pass # func _on_Tween_tween_all_completed
+
+
+# Declara TURNO do Jogador
+func turn_on_player(value : bool):
+	CoreSystemManager.turn = value
+	set_process_unhandled_input(value)
+	CoreSystemManager.process = value
+	
+	pass # func turn_on_player
+
+
+# Função chamada por um sinal do Cronometro -> MainCore -> Card
+# Declara TURNO do Sistema
+func call_signals():
+	system_turn()
+	
+	pass # func call_signals
