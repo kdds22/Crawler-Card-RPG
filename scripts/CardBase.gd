@@ -350,6 +350,8 @@ func system_turn():
 	
 	if count_cards_calls >= 4: # minimo de 4 cartas pra voltar o turno do jogador 
 		turn_on_player(true)
+		count_cards_calls = 0
+		get_node(main_core_path).turn_on()
 	
 	pass
 

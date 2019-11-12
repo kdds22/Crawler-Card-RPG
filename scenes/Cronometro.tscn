@@ -6,7 +6,7 @@
 
 [sub_resource type="Animation" id=1]
 resource_name = "run_time"
-length = 7.0
+length = 6.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:region_rect")
 tracks/0/interp = 1
@@ -14,7 +14,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 1, 2, 3, 4, 5, 6 ),
+"times": PoolRealArray( 0, 1, 2, 3, 4, 5 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ Rect2( 0, 0, 130, 207 ), Rect2( 166, 0, 131, 207 ), Rect2( 339, 0, 130, 207 ), Rect2( 519, 0, 131, 207 ), Rect2( 694, 0, 130, 207 ), Rect2( 870, 0, 130, 207 ) ]
@@ -38,7 +38,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 7 ),
+"times": PoolRealArray( 6 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
 "args": [  ],
@@ -82,8 +82,9 @@ script = ExtResource( 1 )
 scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 2 )
 region_enabled = true
-region_rect = Rect2( 870, 0, 130, 207 )
+region_rect = Rect2( 0, 0, 130, 207 )
 
 [node name="ClockAnim" type="AnimationPlayer" parent="."]
+autoplay = "run_time"
 anims/run_time = SubResource( 1 )
 anims/turn_time = SubResource( 2 )

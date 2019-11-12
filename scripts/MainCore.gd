@@ -4,7 +4,7 @@ signal system_turn
 
 onready var pre_card_base = preload("res://scenes/CardBase.tscn")
 onready var all_pos = $Cards.get_children()
-onready var cronometro = get_node("../Cronometro")
+onready var cronometro = $Cronometro
 
 
 var ref_player : Object
@@ -105,8 +105,17 @@ func call_new_locals() -> void:
 	pass # func call_new_locals
 
 
-# Chamado pelo Cronometro, ao terminar o segundos necessarios pra realizar uma ação
+# Emite um sinal informando que o turno do Player acabou e que será a vez/turno do sistema
 func turn_off():
 	emit_signal("system_turn")
 	
-	pass
+	pass # func turn_off
+
+
+# Reinicia o Cronometro
+func turn_on():
+	$Cronometro/ClockAnim.stop()
+	yield(get_tree().create_timer(3),"timeout")
+	$Cronometro.call_anim("run")
+	
+	pass # func turn_on
