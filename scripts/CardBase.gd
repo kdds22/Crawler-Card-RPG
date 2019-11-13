@@ -107,7 +107,7 @@ func _unhandled_input(event: InputEvent) -> void:
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
 	
-	get_node(main_core_path).connect("system_turn", self, "call_signals")
+	get_node(main_core_path).connect("system_turn", self, "system_turn")
 	
 	
 	
@@ -292,10 +292,11 @@ func _on_interacting_card() -> void:
 	if my_info["Type"] == "Weapon" and _on_card.my_info["Type"] == "Action" and _on_card.my_info["Name"] == "Ogre":
 		CoreSystemManager.turn = false
 		_on_card.call_anim_hit()
+		_on_card._show_card_points(CoreSystemManager.weapon_damage, "hit")
 		pass
 	if my_info["Type"] == "Action" and my_info["Description"] == "Potion" and _on_card.my_info["Type"] == "Player":
 		CoreSystemManager.turn = true
-		_on_card.heal()
+		_on_card.heal(CoreSystemManager.potion_cure)
 		pass
 	pass # func _on_interacting_card
 
@@ -314,11 +315,12 @@ func _on_Detect_body_exited(body: PhysicsBody2D) -> void:
 
 
 # O SISTEMA Usa o que tiver a disposição pra ATACAR o PLAYER, no caso, os inimigos.... por enquanto
-func atk_player():
+func atk_player() -> void:
 	$Tween.interpolate_property(self, "global_position", global_position, get_node("/root/MainCore").ref_player.global_position, .5, Tween.TRANS_EXPO, Tween.EASE_IN)
 	$Tween.start()
 	yield($Tween,"tween_completed")
 	get_node("/root/MainCore").ref_player.call_anim_hit()
+	get_node("/root/MainCore").ref_player._show_card_points(CoreSystemManager.enemy_atk, "hit")
 	$Tween.interpolate_property(self, "position", position, initial_position, .5, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	$Tween.start()
 	yield($Tween,"tween_completed")
@@ -327,24 +329,25 @@ func atk_player():
 	get_parent().scale = Vector2(1.1,1.1)
 	get_parent().self_modulate = Color(1,1,1)
 	$Sprite.z_index = 0
-	
+	turn_on_player(true)
 	pass # func atk_player
 
 
 # Metodo pra CURAR o Player (atualmente, só por poção)
-func heal():
+func heal(value) -> void:
 	var heal = pre_heal.instance()
 	add_child(heal)
+	_show_card_points(value, "heal")
 	pass # func heal
 
 
 # Função de AÇÂO Básica do SISTEMA
-func system_turn():
+func system_turn() -> void:
 	if my_info["Type"] == "Action" and my_info["Description"] == "Enemy":
-			turn_on_player(false)
-			yield(get_tree().create_timer(1, false),"timeout")
-			count_cards_calls += 1
-			atk_player()
+		turn_on_player(false)
+		yield(get_tree().create_timer(1, false),"timeout")
+		count_cards_calls += 1
+		atk_player()
 	else:
 		count_cards_calls += 1 # contagem do total de cartas (que não seja inimigo)
 	
@@ -365,7 +368,7 @@ func _on_Tween_tween_all_completed() -> void:
 
 
 # Declara TURNO do Jogador
-func turn_on_player(value : bool):
+func turn_on_player(value : bool) -> void:
 	CoreSystemManager.turn = value
 	set_process_unhandled_input(value)
 	CoreSystemManager.process = value
@@ -373,9 +376,14 @@ func turn_on_player(value : bool):
 	pass # func turn_on_player
 
 
-# Função chamada por um sinal do Cronometro -> MainCore -> Card
-# Declara TURNO do Sistema
-func call_signals():
-	system_turn()
-	
-	pass # func call_signals
+func _show_card_points(value : int, type : String) -> void:
+	$Number/Value.text = str(value)
+	$Number.show()
+	match type:
+		"hit":
+			$Number/AnimationPlayer.play("hit")
+		"heal":
+			$Number/AnimationPlayer.play("heal")
+		_:
+			print("func _show_card_points... value: ",value," e type: ",type)
+	pass

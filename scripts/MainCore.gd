@@ -68,6 +68,8 @@ func card_clicked(card : RigidBody2D) -> void:
 		new_card = CardManager.local_card_clicked(info, card.get_parent(), info["Index"])
 		for i in len(new_card):
 			add_new_card(new_card[i], card.get_parent(), new_card[i]["Index"])
+		
+		turn_off()
 	
 	pass # func card_clicked
 
