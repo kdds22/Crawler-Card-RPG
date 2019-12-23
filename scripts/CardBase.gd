@@ -106,10 +106,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Chamado ao Instanciar uma Carta
 func _ready() -> void:
-	
+	# TODO: seilah... só um exemplo!
 	get_node(main_core_path).connect("system_turn", self, "system_turn")
-	
-	
 	
 	global_initial_position = global_position
 	initial_position = position
@@ -387,3 +385,4 @@ func _show_card_points(value : int, type : String) -> void:
 		_:
 			print("func _show_card_points... value: ",value," e type: ",type)
 	pass
+	

@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://node_tests/texture_button.tscn" type="PackedScene" id=1]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="TB_1" parent="." instance=ExtResource( 1 )]
+
+[node name="TB_2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 460, 212 )
+
+[node name="TB_3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 210, 348 )
+
+[node name="TB_4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 320, 81 )

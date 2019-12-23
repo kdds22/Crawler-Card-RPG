@@ -1,0 +1,122 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/cartas/card_based_2.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends TextureButton
+
+
+var initial_position : Vector2
+var detectArea : Area2D
+var connectArea : Area2D
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	initial_position = get_parent().global_position
+	print($DetectingArea, \" - \", get_parent().name)
+	detectArea = $DetectingArea
+	print($ConnectArea, \" - \", get_parent().name)
+	connectArea = $ConnectArea
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta: float) -> void:
+#	pass
+
+
+func _on_TextureButton_mouse_entered() -> void:
+	print(\"Mouse entrou - \",get_parent().name)
+	pass # Replace with function body.
+
+
+func _on_TextureButton_mouse_exited() -> void:
+	print(\"Mouse saiu - \",get_parent().name)
+	pass # Replace with function body.
+
+
+func _on_TextureButton_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
+		print(\"Left mouse button was pressed!\")
+	if pressed and event is InputEventMouseMotion:
+		get_parent().global_position = get_global_mouse_position()
+		get_parent().z_index = 1
+	else:
+		get_parent().global_position = initial_position
+		get_parent().z_index = 0
+		
+	pass # Replace with function body.
+
+
+func _on_DetectingArea_area_shape_entered(area_id: int, area: Area2D, area_shape: int, self_shape: int) -> void:
+	if area != connectArea and area != detectArea and area.get_parent().get_parent().z_index == 1:
+		print()
+		print(\"SHAPE ENTERED\")
+		print()
+		print(\"Area ID: \",area_id)
+		print(\"Area: \",area.name)
+		print(\"Area SHAPE: \",area_shape)
+		print(\"SELF Shape: \",self_shape)
+	
+	pass # Replace with function body.
+
+
+func _on_DetectingArea_area_shape_exited(area_id: int, area: Area2D, area_shape: int, self_shape: int) -> void:
+	if area != connectArea and area != detectArea and area.get_parent().get_parent().z_index == 1:
+		print()
+		print(\"SHAPE EXITED\")
+		print()
+		print(\"Area ID: \",area_id)
+		print(\"Area: \",area.name)
+		print(\"Area SHAPE: \",area_shape)
+		print(\"SELF Shape: \",self_shape)
+	
+	pass # Replace with function body.
+
+
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
+func _on_ConnectArea_area_shape_entered(area_id: int, area: Area2D, area_shape: int, self_shape: int) -> void:
+	if area != detectArea and area.get_parent().get_parent().z_index == 0:
+		print(area.get_parent().get_parent().name)
+"
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 32, 50 )
+
+[sub_resource type="CircleShape2D" id=3]
+
+[node name="Node2D" type="Node2D"]
+position = Vector2( 136, 201 )
+
+[node name="TextureButton" type="TextureButton" parent="."]
+margin_left = -50.0
+margin_top = -50.0
+margin_right = 50.0
+margin_bottom = 50.0
+action_mode = 0
+texture_normal = ExtResource( 1 )
+stretch_mode = 4
+script = SubResource( 1 )
+
+[node name="DetectingArea" type="Area2D" parent="TextureButton"]
+position = Vector2( 50, 51 )
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TextureButton/DetectingArea"]
+position = Vector2( 0, -1 )
+shape = SubResource( 2 )
+
+[node name="ConnectArea" type="Area2D" parent="TextureButton"]
+position = Vector2( 50, 51 )
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TextureButton/ConnectArea"]
+position = Vector2( 0, -1 )
+shape = SubResource( 3 )
+[connection signal="gui_input" from="TextureButton" to="TextureButton" method="_on_TextureButton_gui_input"]
+[connection signal="mouse_entered" from="TextureButton" to="TextureButton" method="_on_TextureButton_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="TextureButton" method="_on_TextureButton_mouse_exited"]
+[connection signal="area_shape_entered" from="TextureButton/DetectingArea" to="TextureButton" method="_on_DetectingArea_area_shape_entered"]
+[connection signal="area_shape_exited" from="TextureButton/DetectingArea" to="TextureButton" method="_on_DetectingArea_area_shape_exited"]
+[connection signal="area_shape_entered" from="TextureButton/ConnectArea" to="TextureButton" method="_on_ConnectArea_area_shape_entered"]

@@ -15,7 +15,7 @@ func _on_Mouse_body_entered(body: PhysicsBody2D) -> void:
 	pass # func _on_Mouse_body_entered
 
 
-# Detecção do Body com Mouse_Area (ENTRADA)
+# Detecção do Body com Mouse_Area (SAIDA)
 func _on_Mouse_body_exited(body: PhysicsBody2D) -> void:
 	CardManager._on_card_interacting = null
 	body.position = body.initial_position
