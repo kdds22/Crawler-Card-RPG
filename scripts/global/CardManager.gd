@@ -40,8 +40,6 @@ var ref_move = {"ref_leftMove" : {}, "ref_middleMove" : {}, "ref_rightMove" : {}
 # Referencia da Interoperabilidade das Cartas ESCOLHIDAS
 #########################################################################################################
 
-var card_clicked : RigidBody2D # carta-clicada 
-var card_released : RigidBody2D # com qual carta a carta-clicada irá interagir
 
 var _on_card_interacting : RigidBody2D
 
@@ -66,8 +64,6 @@ func _ready() -> void:
 
 # LIMPA a Interoperabilidade entre as cartas
 func clear_maked() -> void:
-	card_clicked = null # limpa a carta-clicada
-	card_released = null # limpa a carta-"soltada"-released
 	
 	pass # func clear_maked
 

@@ -9,8 +9,6 @@ var pre_heal = preload("res://scenes/HealEffect.tscn")
 
 var my_info : Dictionary = {}
 
-var card_info_interacting : RigidBody2D
-
 # =====================================================
 # Fim da Propriedade das Cartas
 # =====================================================
@@ -22,14 +20,9 @@ var global_initial_position : Vector2
 
 var focused := false # usado pra indicar uma carta
 var clicked := false # usado como um FLAG de clique unico
-var moving := false 
-var handling := false
+var moving := false # apos (FOCUSED e CLICKED) = TRUE, flag (true) se arrastar a carta
 
 var count_cards_calls : int = 0
-
-var interactin_flag_clicked : bool = false
-var interactin_flag_n_clicked : bool = false
-
 
 
 # PEGA todas as informações da Carta
@@ -308,7 +301,6 @@ func _on_Detect_body_entered(body: PhysicsBody2D) -> void:
 func _on_Detect_body_exited(body: PhysicsBody2D) -> void:
 	if body != self and body.focused: # and body.focused:
 		print("Saiu de: ",body.my_info["Name"], " -> ",self.my_info["Name"])
-		card_info_interacting = null
 	pass # Replace with function body.
 
 
